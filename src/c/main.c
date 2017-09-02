@@ -152,7 +152,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 
 void setup_tz_text_time(Window *window)
 {
-#define TZ_SPACING 14
+#define TZ_SPACING 15
 #define tz01_clock_pos GRect(2, 73, 180, 180)
 #define tz02_clock_pos GRect(2, 73 + TZ_SPACING, 180, 180)
 #define tz03_clock_pos GRect(2, 73 + (2 * TZ_SPACING), 180, 180)
