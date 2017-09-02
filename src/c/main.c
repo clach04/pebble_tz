@@ -257,7 +257,6 @@ void update_tz_time(struct tm *tick_time)
     utc_tm = gmtime(&utc_time);
     // TODO perform minute math on utc_time instead? then skip crap below
     utc_tm->tm_hour += (settings.tz02_offset + settings.local_offset_in_hours);
-                       );
     if (utc_tm->tm_hour >= 24)
     {
         utc_tm->tm_hour -= 24;
@@ -273,7 +272,6 @@ void update_tz_time(struct tm *tick_time)
     utc_tm = gmtime(&utc_time);
     // TODO perform minute math on utc_time instead? then skip crap below
     utc_tm->tm_hour += (settings.tz03_offset + settings.local_offset_in_hours);
-                       );
     if (utc_tm->tm_hour >= 24)
     {
         utc_tm->tm_hour -= 24;
