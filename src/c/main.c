@@ -31,7 +31,8 @@ extern void setup_text_time(Window *window);
 #define INIT_TZ04_OFFSET (+1)
 
 
-#define MAX_TZ_NAME_LEN 6 // Long enough for "GMT-xx"
+//#define MAX_TZ_NAME_LEN 6 // Long enough for "GMT-xx"
+#define MAX_TZ_NAME_LEN 12  // Long enough for "timezonename"
 typedef struct persist {
     char tz01_name[MAX_TZ_NAME_LEN+1];
     int tz01_offset;

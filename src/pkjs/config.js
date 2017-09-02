@@ -44,11 +44,11 @@ module.exports = [
             {
                 "type": "input",
                 "label": "TZ1 name",
-                "description": "Name limited to 6 bytes", // TODO figure out reasonable length
+                "description": "Name limited to 12 bytes", // TODO figure out reasonable length
                 "messageKey": "TZ01_NAME",
                 "defaultValue": "GMT-1",
                 "attributes": {
-                    "limit": 6
+                    "limit": 12
                 }
             },
             {
@@ -64,11 +64,11 @@ module.exports = [
             {
                 "type": "input",
                 "label": "TZ2 name",
-                "description": "Name limited to 6 bytes",
+                "description": "Name limited to 12 bytes",
                 "messageKey": "TZ02_NAME",
                 "defaultValue": "GMT+1",
                 "attributes": {
-                    "limit": 6
+                    "limit": 12
                 }
             },
             {
@@ -84,11 +84,11 @@ module.exports = [
             {
                 "type": "input",
                 "label": "TZ3 name",
-                "description": "Name limited to 6 bytes",
+                "description": "Name limited to 12 bytes",
                 "messageKey": "TZ03_NAME",
                 "defaultValue": "GMT+8",
                 "attributes": {
-                    "limit": 6
+                    "limit": 12
                 }
             },
             {
@@ -104,11 +104,11 @@ module.exports = [
             {
                 "type": "input",
                 "label": "TZ4 name",
-                "description": "Name limited to 6 bytes",
+                "description": "Name limited to 12 bytes",
                 "messageKey": "TZ04_NAME",
                 "defaultValue": "GMT-8",
                 "attributes": {
-                    "limit": 6
+                    "limit": 12
                 }
             },
             {
