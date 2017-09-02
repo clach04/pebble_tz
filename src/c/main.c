@@ -36,10 +36,8 @@ typedef struct persist {
     int tz02_offset;
     char tz03_name[MAX_TZ_NAME_LEN+1];
     int tz03_offset;
-#ifdef PBL_PLATFORM_APLITE
-    // Aplite times are all base on local time
+    // Aplite times are all base on local time so need to know local offset, for later platforms this is always zero
     int local_offset_in_hours;
-#endif  // PBL_PLATFORM_APLITE
 } __attribute__((__packed__)) persist;
 
 persist settings = {
@@ -50,7 +48,7 @@ persist settings = {
     .tz03_name = INIT_TZ03_NAME,
     .tz03_offset = INIT_TZ03_OFFSET,
 #ifdef PBL_PLATFORM_APLITE
-    .local_offset_in_hours = 0,
+    .local_offset_in_hours = 0,  // This will be calculated and sent from javascript on phone
 #endif  // PBL_PLATFORM_APLITE
 };
 
@@ -69,7 +67,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 #ifdef PBL_PLATFORM_APLITE
     if(packet_contains_key(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET_MINS))
     {
-        // NOTE this is ONLY needed for Aplite
+        // NOTE this is ONLY needed for Aplite, later platforms must keep this as zero
         settings.local_offset_in_hours = packet_get_integer(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET_MINS) / 60;  // only integer (complete) hours supported
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found local offset: %d", settings.local_offset_in_hours);
     }
@@ -224,7 +222,7 @@ void update_tz_time(struct tm *tick_time)
 
     if (clock_is_24h_style())
     {
-        time_format = "%R";		
+        time_format = "%R";  // TODO show a/p?
     }
     else
     {
@@ -240,11 +238,8 @@ void update_tz_time(struct tm *tick_time)
     // TODO convert below into a macro (or function?)
     utc_tm = gmtime(&utc_time);
     // TODO perform minute math on utc_time instead? then skip crap below
-    utc_tm->tm_hour += (settings.tz01_offset
-#ifdef PBL_PLATFORM_APLITE
-                        + settings.local_offset_in_hours
-#endif // PBL_PLATFORM_APLITE
-                       );
+    utc_tm->tm_hour += (settings.tz01_offset + settings.local_offset_in_hours);
+                       
     if (utc_tm->tm_hour >= 24)
     {
         utc_tm->tm_hour -= 24;
@@ -261,10 +256,7 @@ void update_tz_time(struct tm *tick_time)
 
     utc_tm = gmtime(&utc_time);
     // TODO perform minute math on utc_time instead? then skip crap below
-    utc_tm->tm_hour += (settings.tz02_offset
-#ifdef PBL_PLATFORM_APLITE
-                        + settings.local_offset_in_hours
-#endif // PBL_PLATFORM_APLITE
+    utc_tm->tm_hour += (settings.tz02_offset + settings.local_offset_in_hours);
                        );
     if (utc_tm->tm_hour >= 24)
     {
@@ -280,10 +272,7 @@ void update_tz_time(struct tm *tick_time)
 
     utc_tm = gmtime(&utc_time);
     // TODO perform minute math on utc_time instead? then skip crap below
-    utc_tm->tm_hour += (settings.tz03_offset
-#ifdef PBL_PLATFORM_APLITE
-                        + settings.local_offset_in_hours
-#endif // PBL_PLATFORM_APLITE
+    utc_tm->tm_hour += (settings.tz03_offset + settings.local_offset_in_hours);
                        );
     if (utc_tm->tm_hour >= 24)
     {
