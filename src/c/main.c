@@ -153,9 +153,9 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 void setup_tz_text_time(Window *window)
 {
 #define tz01_clock_pos GRect(2, 73, 180, 180)
-#define tz02_clock_pos GRect(2, 85, 180, 180)
-#define tz03_clock_pos GRect(2, 85 + 12, 180, 180)
-#define tz04_clock_pos GRect(2, 85 + (2 * 12), 180, 180)
+#define tz02_clock_pos GRect(2, 73 + 13, 180, 180)
+#define tz03_clock_pos GRect(2, 73 + (2 * 13), 180, 180)
+#define tz04_clock_pos GRect(2, 73 + (3 * 13), 180, 180)
 #define TZ_FONT FONT_DATE_SYSTEM_NAME
     
 #define TZ_TIME_ALIGN GTextAlignmentLeft
