@@ -15,5 +15,6 @@ Pebble.addEventListener('ready', function(e) {
             console.log('failed to send options to pebble. Error: ' + e.error.message);
         }
     );
+    // TODO is it possible to lookup defaults and send them now?
 
 });
