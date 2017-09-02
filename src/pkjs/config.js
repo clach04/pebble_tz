@@ -102,6 +102,26 @@ module.exports = [
                 "step": 1
             },
             {
+                "type": "input",
+                "label": "TZ4 name",
+                "description": "Name limited to 6 bytes",
+                "messageKey": "TZ04_NAME",
+                "defaultValue": "GMT-8",
+                "attributes": {
+                    "limit": 6
+                }
+            },
+            {
+                "type": "slider",
+                "label": "TZ4 UTC offset",
+                "description": "UTC offset (whole hours only)",
+                "messageKey": "TZ04_UTC_OFFSET",
+                "defaultValue": -8,
+                "min": -12,
+                "max": +12,
+                "step": 1
+            },
+            {
                 "type": "text",
                 "defaultValue": "GMT+01 == BST for UK or CET for Western Europe<br>GMT+00 == Winter time for UK or CET for Western Europe<br>GMT-07 == PDT typically starts March, ends November<br>GMT-08 == PST Pacific Standard Time (Winter)"
             },
