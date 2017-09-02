@@ -4,12 +4,12 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "fill-me-in",
+    "name": "pebble_tz",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "FILL ME IN!",
+        "displayName": "pebble_tz",
         "enableMultiJS": true,
         "messageKeys": [
             "TIME_COLOR",
@@ -28,7 +28,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "33a003e9-91ec-40fe-b652-b41248212f74",
+        "uuid": "2dd4b01a-fa81-4ec2-a4a8-52e94cdeb030",
         "watchapp": {
             "watchface": true
         }
