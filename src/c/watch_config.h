@@ -1,6 +1,12 @@
 #pragma once
 
-#define USE_GENERIC_MAIN
+//#define USE_GENERIC_MAIN
+
+#define CUSTOM_IN_RECV_HANDLER tz_config_handler
+#define TICK_HANDLER tz_tick_handler
+#define SETUP_TIME setup_tz_text_time
+#define CLEANUP_TIME cleanup_tz_text_time
+
 #undef REMOVE_LEADING_ZERO_FROM_TIME  /* 12 hour display will not have a leading '0' or ' ' if this is defined */
 #undef FONT_NAME
 #undef FONT_SYSTEM_NAME  /* the default font system will be used */
@@ -34,7 +40,7 @@
     #endif /* DRAW_BATTERY */
 
 #else /* PBL_RECT 144x168*/
-    #define CLOCK_POS GRect(0, 52, 144, 168) /* probably taller than really needed */
+    #define CLOCK_POS GRect(0, -15, 144, 168) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 144, 168)
     #define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
     #define DATE_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
