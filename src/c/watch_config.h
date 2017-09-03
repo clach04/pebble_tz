@@ -17,11 +17,18 @@
 #define USE_HEALTH
 //#define UPDATE_HEALTH_ON_ACTIVITY  /* If not set, only updates step count display once per minute */
 
-#define DRAW_BATTERY
-#define DRAW_SMALL_BATTERY
+#define BAT_FMT_STR "%d%%"
+#undef DRAW_BATTERY
+//#define DRAW_BATTERY
+//#define DRAW_SMALL_BATTERY
 
 //#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
 //#define QUIET_TIME_IMAGE_GRECT GRect(20, 20, 20, 20)  // Example assumes a 20x20 image
+
+#define BT_DISCONNECT_IMAGE RESOURCE_ID_IMAGE_BT_DISCONNECT
+
+#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
+#define QUIET_TIME_IMAGE_GRECT GRect(3, 60, 17, 17)  // 17x17 image
 
 #ifdef PBL_ROUND /* 180x180 */
 /*TODO center/move right*/
@@ -44,6 +51,8 @@
     #define HEALTH_POS GRect(0, 40, 144, 168)
     #define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
     #define DATE_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
+    //#define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 168 - (2 * 30 + 4), 20, 30)
+    #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 90, 20, 30)
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, 144, 168)
     #else
