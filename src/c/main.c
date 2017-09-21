@@ -152,19 +152,11 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 
 void setup_tz_text_time(Window *window)
 {
-#define TZ_SPACING (15+4)  // works need moving things up BUT has bands above text
-//#define TZ_SPACING (15+3)  // works need moving things up very slightly BUT probaly too close
-//#define TZ_SPACING (15+2)  // truncates
-/* PBL_RECT 144x168*/
-#define T_WIDTH 144
-//#define T_HEIGHT TZ_SPACING
-
-//#define T_START 73  // works when not using different colors
-#define T_START 70  // works when not using different colors
-#define tz01_clock_pos GRect(2, T_START, T_WIDTH, TZ_SPACING)
-#define tz02_clock_pos GRect(2, T_START + (TZ_SPACING), T_WIDTH, TZ_SPACING)
-#define tz03_clock_pos GRect(2, T_START + (2 * (TZ_SPACING)), T_WIDTH, TZ_SPACING)
-#define tz04_clock_pos GRect(2, T_START + (3 * (TZ_SPACING)), T_WIDTH, TZ_SPACING)
+#define TZ_SPACING 15
+#define tz01_clock_pos GRect(2, 73, 180, 180)
+#define tz02_clock_pos GRect(2, 73 + TZ_SPACING, 180, 180)
+#define tz03_clock_pos GRect(2, 73 + (2 * TZ_SPACING), 180, 180)
+#define tz04_clock_pos GRect(2, 73 + (3 * TZ_SPACING), 180, 180)
 #define TZ_FONT FONT_DATE_SYSTEM_NAME
     
 #define TZ_TIME_ALIGN GTextAlignmentLeft
@@ -224,13 +216,6 @@ void setup_tz_text_time(Window *window)
 #define TZ_TEXT_LAYER(TZ_MACRO) TZ_MACRO ## _time_layer = text_layer_create(TZ_MACRO ## _clock_pos); text_layer_set_background_color(TZ_MACRO ## _time_layer, GColorClear); text_layer_set_text_color(TZ_MACRO ## _time_layer, time_color); APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for tz3"); text_layer_set_text(TZ_MACRO ## _time_layer, "00:00");  text_layer_set_font(TZ_MACRO ## _time_layer, fonts_get_system_font(TZ_FONT)); text_layer_set_text_alignment(TZ_MACRO ## _time_layer, TZ_TIME_ALIGN);  layer_add_child(window_get_root_layer(window), text_layer_get_layer(TZ_MACRO ## _time_layer)); 
 
     TZ_TEXT_LAYER(tz04)
-
-        /*
-    text_layer_enable_screen_text_flow_and_paging(tz01_time_layer, 0);
-    text_layer_enable_screen_text_flow_and_paging(tz02_time_layer, 0);
-    text_layer_enable_screen_text_flow_and_paging(tz03_time_layer, 0);
-    text_layer_enable_screen_text_flow_and_paging(tz04_time_layer, 0);
-    */
 }
 
 void cleanup_tz_text_time()
@@ -254,9 +239,6 @@ void update_tz_time(struct tm *tick_time)
     char *time_format=NULL;
     time_t utc_time=time(NULL);
     struct tm *utc_tm=NULL;
-    GColor t_color, b_color;
-    #define day_start_hour 6 // TODO make config
-    #define day_end_hour 18
 
     if (clock_is_24h_style())
     {
@@ -289,19 +271,6 @@ void update_tz_time(struct tm *tick_time)
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz01_time_str, sizeof(tz01_time_str), "%s %s", buffer, settings.tz01_name);
 
-    // Show different colors if working/business day
-    if ((utc_tm->tm_hour >= day_start_hour) && (utc_tm->tm_hour <= 18 ))
-    {
-        t_color = background_color;
-        b_color = time_color;
-    }
-    else
-    {
-        t_color = time_color;
-        b_color = background_color;
-    }
-    text_layer_set_background_color(tz01_time_layer, b_color);
-    text_layer_set_text_color(tz01_time_layer, t_color);
     text_layer_set_text(tz01_time_layer, tz01_time_str);
 
 
@@ -318,19 +287,6 @@ void update_tz_time(struct tm *tick_time)
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz02_time_str, sizeof(tz02_time_str), "%s %s", buffer, settings.tz02_name);
 
-    // Show different colors if working/business day
-    if ((utc_tm->tm_hour >= day_start_hour) && (utc_tm->tm_hour <= 18 ))
-    {
-        t_color = background_color;
-        b_color = time_color;
-    }
-    else
-    {
-        t_color = time_color;
-        b_color = background_color;
-    }
-    text_layer_set_background_color(tz02_time_layer, b_color);
-    text_layer_set_text_color(tz02_time_layer, t_color);
     text_layer_set_text(tz02_time_layer, tz02_time_str);
 
     utc_tm = gmtime(&utc_time);
@@ -346,23 +302,9 @@ void update_tz_time(struct tm *tick_time)
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz03_time_str, sizeof(tz03_time_str), "%s %s", buffer, settings.tz03_name);
 
-    // Show different colors if working/business day
-    if ((utc_tm->tm_hour >= day_start_hour) && (utc_tm->tm_hour <= 18 ))
-    {
-        t_color = background_color;
-        b_color = time_color;
-    }
-    else
-    {
-        t_color = time_color;
-        b_color = background_color;
-    }
-    text_layer_set_background_color(tz03_time_layer, b_color);
-    text_layer_set_text_color(tz03_time_layer, t_color);
     text_layer_set_text(tz03_time_layer, tz03_time_str);
 
 // TODO perform minute math on utc_time instead? then skip crap below
-//    TODO add color check to macro
 #define TZ_DO_TIME(TZ_MACRO)     utc_tm = gmtime(&utc_time); utc_tm->tm_hour += (settings.TZ_MACRO ## _offset + settings.local_offset_in_hours); if (utc_tm->tm_hour >= 24) { utc_tm->tm_hour -= 24;} if (utc_tm->tm_hour < 0) {utc_tm->tm_hour += 24;} strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 
 TZ_DO_TIME(tz04)
