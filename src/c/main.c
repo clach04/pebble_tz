@@ -152,18 +152,15 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 
 void setup_tz_text_time(Window *window)
 {
-#ifdef SHOW_DAY_COLORS  // TODO / FIXME do something this this
-    #define T_START 70
-    #define TZ_SPACING (15+4)  // works need moving things up BUT has bands/margins above text
-    //#define TZ_SPACING (15+3)  // works need moving things up very slightly BUT probaly too close
-    //#define TZ_SPACING (15+2)  // truncates
-#else
-    #define TZ_SPACING (15)  // works need moving things up BUT has bands/margins above text
-    #define T_START 73  // works when not using different colors
-#endif  // SHOW_DAY_COLORS
+#define TZ_SPACING (15+4)  // works need moving things up BUT has bands above text
+//#define TZ_SPACING (15+3)  // works need moving things up very slightly BUT probaly too close
+//#define TZ_SPACING (15+2)  // truncates
 /* PBL_RECT 144x168*/
 #define T_WIDTH 144
+//#define T_HEIGHT TZ_SPACING
 
+//#define T_START 73  // works when not using different colors
+#define T_START 70  // works when not using different colors
 #define tz01_clock_pos GRect(2, T_START, T_WIDTH, TZ_SPACING)
 #define tz02_clock_pos GRect(2, T_START + (TZ_SPACING), T_WIDTH, TZ_SPACING)
 #define tz03_clock_pos GRect(2, T_START + (2 * (TZ_SPACING)), T_WIDTH, TZ_SPACING)
@@ -258,10 +255,8 @@ void update_tz_time(struct tm *tick_time)
     time_t utc_time=time(NULL);
     struct tm *utc_tm=NULL;
     GColor t_color, b_color;
-#ifdef SHOW_DAY_COLORS  // FIXME do something with this
     #define day_start_hour 6 // TODO make config
     #define day_end_hour 18
-#endif  // SHOW_DAY_COLORS
 
     if (clock_is_24h_style())
     {
@@ -294,7 +289,6 @@ void update_tz_time(struct tm *tick_time)
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz01_time_str, sizeof(tz01_time_str), "%s %s", buffer, settings.tz01_name);
 
-#ifdef SHOW_DAY_COLORS
     // Show different colors if working/business day
     if ((utc_tm->tm_hour >= day_start_hour) && (utc_tm->tm_hour <= 18 ))
     {
@@ -308,7 +302,6 @@ void update_tz_time(struct tm *tick_time)
     }
     text_layer_set_background_color(tz01_time_layer, b_color);
     text_layer_set_text_color(tz01_time_layer, t_color);
-#endif  // SHOW_DAY_COLORS
     text_layer_set_text(tz01_time_layer, tz01_time_str);
 
 
@@ -325,7 +318,6 @@ void update_tz_time(struct tm *tick_time)
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz02_time_str, sizeof(tz02_time_str), "%s %s", buffer, settings.tz02_name);
 
-#ifdef SHOW_DAY_COLORS
     // Show different colors if working/business day
     if ((utc_tm->tm_hour >= day_start_hour) && (utc_tm->tm_hour <= 18 ))
     {
@@ -339,7 +331,6 @@ void update_tz_time(struct tm *tick_time)
     }
     text_layer_set_background_color(tz02_time_layer, b_color);
     text_layer_set_text_color(tz02_time_layer, t_color);
-#endif  // SHOW_DAY_COLORS
     text_layer_set_text(tz02_time_layer, tz02_time_str);
 
     utc_tm = gmtime(&utc_time);
@@ -355,7 +346,6 @@ void update_tz_time(struct tm *tick_time)
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz03_time_str, sizeof(tz03_time_str), "%s %s", buffer, settings.tz03_name);
 
-#ifdef SHOW_DAY_COLORS
     // Show different colors if working/business day
     if ((utc_tm->tm_hour >= day_start_hour) && (utc_tm->tm_hour <= 18 ))
     {
@@ -369,7 +359,6 @@ void update_tz_time(struct tm *tick_time)
     }
     text_layer_set_background_color(tz03_time_layer, b_color);
     text_layer_set_text_color(tz03_time_layer, t_color);
-#endif  // SHOW_DAY_COLORS
     text_layer_set_text(tz03_time_layer, tz03_time_str);
 
 // TODO perform minute math on utc_time instead? then skip crap below
