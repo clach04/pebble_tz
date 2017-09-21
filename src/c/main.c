@@ -19,23 +19,23 @@ extern void setup_text_time(Window *window);
 //FIXME
 
 #define INIT_TZ01_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
-#define INIT_TZ01_OFFSET (0)  // TODO document these are UTC (whole) hour offsets (not minutes) rather than names and thus not DST aware
+#define INIT_TZ01_OFFSET (0 * 60)  // TODO document these are UTC (whole) hour offsets (not minutes) rather than names and thus not DST aware
 
 #define INIT_TZ02_NAME "GMT-08"  // PST. PDT is GMT-07 and typically starts March, ends November
-#define INIT_TZ02_OFFSET (-8)
+#define INIT_TZ02_OFFSET (-8 * 60)
 
 #define INIT_TZ03_NAME "GMT+08"  // HKT - no DST for Hong Kong
-#define INIT_TZ03_OFFSET (+8)
+#define INIT_TZ03_OFFSET (+8 * 60)
 
 #define INIT_TZ04_NAME "GMT+01"  // summer time for UK or Winter for Western Europe
-#define INIT_TZ04_OFFSET (+1)
+#define INIT_TZ04_OFFSET (+1 * 60)
 
 
 //#define MAX_TZ_NAME_LEN 6 // Long enough for "GMT-xx"
 #define MAX_TZ_NAME_LEN 12  // Long enough for "timezonename"
 typedef struct persist {
     char tz01_name[MAX_TZ_NAME_LEN+1];
-    int tz01_offset;
+    int tz01_offset;  // Number of mins
     char tz02_name[MAX_TZ_NAME_LEN+1];
     int tz02_offset;
     char tz03_name[MAX_TZ_NAME_LEN+1];
@@ -43,7 +43,7 @@ typedef struct persist {
     char tz04_name[MAX_TZ_NAME_LEN+1];
     int tz04_offset;
     // Aplite times are all base on local time so need to know local offset, for later platforms this is always zero
-    int local_offset_in_hours;
+    int local_offset_in_mins;  // zero for non-Aplite devices
 } __attribute__((__packed__)) persist;
 
 persist settings = {
@@ -55,9 +55,7 @@ persist settings = {
     .tz03_offset = INIT_TZ03_OFFSET,
     .tz04_name = INIT_TZ04_NAME,
     .tz04_offset = INIT_TZ04_OFFSET,
-#ifdef PBL_PLATFORM_APLITE
-    .local_offset_in_hours = 0,  // This will be calculated and sent from javascript on phone
-#endif  // PBL_PLATFORM_APLITE
+    .local_offset_in_mins = 0,  // This will be calculated and sent from javascript on phone
 };
 
 TextLayer *tz01_time_layer=NULL;
@@ -77,8 +75,8 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
     if(packet_contains_key(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET_MINS))
     {
         // NOTE this is ONLY needed for Aplite, later platforms must keep this as zero
-        settings.local_offset_in_hours = packet_get_integer(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET_MINS) / 60;  // only integer (complete) hours supported
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found local offset: %d", settings.local_offset_in_hours);
+        settings.local_offset_in_mins = packet_get_integer(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET_MINS);  // only integer (complete) hours supported
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found local offset: %d", settings.local_offset_in_mins);
     }
 #endif  // PBL_PLATFORM_APLITE
 
@@ -257,8 +255,7 @@ void update_tz_time(struct tm *tick_time)
 
     // Not supposd to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
-    // so far this assumes tz02_offset are hours, ditto for local_offset_in_hours
-    utc_time += (60 * 60 * settings.tz01_offset) + (60 *60 * settings.local_offset_in_hours);
+    utc_time += (60 * settings.tz01_offset) + (60 * settings.local_offset_in_mins);
     utc_tm = gmtime(&utc_time);
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz01_time_str, sizeof(tz01_time_str), "%s %s", buffer, settings.tz01_name);
@@ -268,8 +265,7 @@ void update_tz_time(struct tm *tick_time)
 
     // Not supposd to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
-    // so far this assumes tz02_offset are hours, ditto for local_offset_in_hours
-    utc_time += (60 * 60 * settings.tz02_offset) + (60 *60 * settings.local_offset_in_hours);
+    utc_time += (60 * settings.tz02_offset) + (60 * settings.local_offset_in_mins);
     utc_tm = gmtime(&utc_time);
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz02_time_str, sizeof(tz02_time_str), "%s %s", buffer, settings.tz02_name);
@@ -278,8 +274,7 @@ void update_tz_time(struct tm *tick_time)
 
     // Not supposd to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
-    // so far this assumes tz02_offset are hours, ditto for local_offset_in_hours
-    utc_time += (60 * 60 * settings.tz03_offset) + (60 *60 * settings.local_offset_in_hours);
+    utc_time += (60 * settings.tz03_offset) + (60 * settings.local_offset_in_mins);
     utc_tm = gmtime(&utc_time);
 
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
@@ -288,7 +283,7 @@ void update_tz_time(struct tm *tick_time)
     text_layer_set_text(tz03_time_layer, tz03_time_str);
 
     // TODO minute math, not just hours and seconds
-#define TZ_DO_TIME(TZ_MACRO)     utc_time += (60 * 60 * settings.TZ_MACRO ## _offset) + (60 *60 * settings.local_offset_in_hours); utc_tm = gmtime(&utc_time); strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
+#define TZ_DO_TIME(TZ_MACRO)     utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins); utc_tm = gmtime(&utc_time); strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 
 TZ_DO_TIME(tz04)
 

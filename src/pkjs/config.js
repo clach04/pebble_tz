@@ -54,11 +54,11 @@ module.exports = [
             {
                 "type": "slider",
                 "label": "TZ1 UTC offset",
-                "description": "UTC offset (whole hours only)",
+                "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ01_UTC_OFFSET",
-                "defaultValue": -1,
-                "min": -12,  // TODO consider supporting minute offsets (instead of integer hours)? E.g India, IST (UTC +5:30 == +330mins)
-                "max": +12,
+                "defaultValue": -60,  // -1 * 60
+                "min": -720,  // -12 * 60 == 720 TODO consider supporting minute offsets (instead of integer hours)? E.g India, IST (UTC +5:30 == +330mins)
+                "max": +720,
                 "step": 1
             },
             {
@@ -74,11 +74,11 @@ module.exports = [
             {
                 "type": "slider",
                 "label": "TZ2 UTC offset",
-                "description": "UTC offset (whole hours only)",
+                "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ02_UTC_OFFSET",
                 "defaultValue": +1,
-                "min": -12,
-                "max": +12,
+                "min": -720,
+                "max": +720,
                 "step": 1
             },
             {
@@ -94,11 +94,11 @@ module.exports = [
             {
                 "type": "slider",
                 "label": "TZ3 UTC offset",
-                "description": "UTC offset (whole hours only)",
+                "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ03_UTC_OFFSET",
-                "defaultValue": +8,
-                "min": -12,
-                "max": +12,
+                "defaultValue": +480,  // 8 * 60
+                "min": -720,
+                "max": +720,
                 "step": 1
             },
             {
@@ -114,11 +114,11 @@ module.exports = [
             {
                 "type": "slider",
                 "label": "TZ4 UTC offset",
-                "description": "UTC offset (whole hours only)",
+                "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ04_UTC_OFFSET",
-                "defaultValue": -8,
-                "min": -12,
-                "max": +12,
+                "defaultValue": -480,  // 8 * 60
+                "min": -720,
+                "max": +720,
                 "step": 1
             },
             {
