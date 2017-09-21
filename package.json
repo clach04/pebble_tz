@@ -32,14 +32,14 @@
         "resources": {
             "media": [
                 {
-                    "file": "images/bluetooth_disconnect.png",
-                    "name": "IMAGE_BT_DISCONNECT",
+                    "file": "images/quiet_time_red_white_14x14.png",
+                    "name": "IMAGE_QUIET_TIME",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/quiet_time_red_white_14x14.png",
-                    "name": "IMAGE_QUIET_TIME",
+                    "file": "images/bluetooth_disconnect.png",
+                    "name": "IMAGE_BT_DISCONNECT",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 }

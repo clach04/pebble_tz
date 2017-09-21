@@ -255,57 +255,40 @@ void update_tz_time(struct tm *tick_time)
     // FIXME above is true for non-APLITE platforms, but not for Aplite in CloudPebble Emulator.
     // This does NOT appear to be documented
 
-    // TODO convert below into a macro (or function?)
+    // Not supposd to peak at a time_t but know it is number of seconds since epoc.
+    // So perform arithmetic on second s
+    // so far this assumes tz02_offset are hours, ditto for local_offset_in_hours
+    utc_time += (60 * 60 * settings.tz01_offset) + (60 *60 * settings.local_offset_in_hours);
     utc_tm = gmtime(&utc_time);
-    // TODO perform minute math on utc_time instead? then skip crap below
-    utc_tm->tm_hour += (settings.tz01_offset + settings.local_offset_in_hours);
-                       
-    if (utc_tm->tm_hour >= 24)
-    {
-        utc_tm->tm_hour -= 24;
-    }  
-    if (utc_tm->tm_hour < 0)
-    {
-        utc_tm->tm_hour += 24;
-    }  
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz01_time_str, sizeof(tz01_time_str), "%s %s", buffer, settings.tz01_name);
 
     text_layer_set_text(tz01_time_layer, tz01_time_str);
 
 
+    // Not supposd to peak at a time_t but know it is number of seconds since epoc.
+    // So perform arithmetic on second s
+    // so far this assumes tz02_offset are hours, ditto for local_offset_in_hours
+    utc_time += (60 * 60 * settings.tz02_offset) + (60 *60 * settings.local_offset_in_hours);
     utc_tm = gmtime(&utc_time);
-    // TODO perform minute math on utc_time instead? then skip crap below
-    utc_tm->tm_hour += (settings.tz02_offset + settings.local_offset_in_hours);
-    if (utc_tm->tm_hour >= 24)
-    {
-        utc_tm->tm_hour -= 24;
-    }  
-    if (utc_tm->tm_hour < 0) {
-        utc_tm->tm_hour += 24;
-    }  
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz02_time_str, sizeof(tz02_time_str), "%s %s", buffer, settings.tz02_name);
 
     text_layer_set_text(tz02_time_layer, tz02_time_str);
 
+    // Not supposd to peak at a time_t but know it is number of seconds since epoc.
+    // So perform arithmetic on second s
+    // so far this assumes tz02_offset are hours, ditto for local_offset_in_hours
+    utc_time += (60 * 60 * settings.tz03_offset) + (60 *60 * settings.local_offset_in_hours);
     utc_tm = gmtime(&utc_time);
-    // TODO perform minute math on utc_time instead? then skip crap below
-    utc_tm->tm_hour += (settings.tz03_offset + settings.local_offset_in_hours);
-    if (utc_tm->tm_hour >= 24)
-    {
-        utc_tm->tm_hour -= 24;
-    }  
-    if (utc_tm->tm_hour < 0) {
-        utc_tm->tm_hour += 24;
-    }  
+
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz03_time_str, sizeof(tz03_time_str), "%s %s", buffer, settings.tz03_name);
 
     text_layer_set_text(tz03_time_layer, tz03_time_str);
 
-// TODO perform minute math on utc_time instead? then skip crap below
-#define TZ_DO_TIME(TZ_MACRO)     utc_tm = gmtime(&utc_time); utc_tm->tm_hour += (settings.TZ_MACRO ## _offset + settings.local_offset_in_hours); if (utc_tm->tm_hour >= 24) { utc_tm->tm_hour -= 24;} if (utc_tm->tm_hour < 0) {utc_tm->tm_hour += 24;} strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
+    // TODO minute math, not just hours and seconds
+#define TZ_DO_TIME(TZ_MACRO)     utc_time += (60 * 60 * settings.TZ_MACRO ## _offset) + (60 *60 * settings.local_offset_in_hours); utc_tm = gmtime(&utc_time); strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 
 TZ_DO_TIME(tz04)
 
