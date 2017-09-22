@@ -221,6 +221,7 @@ void setup_tz_text_time(Window *window)
 void cleanup_tz_text_time()
 {
     /* Destroy TextLayers */
+    text_layer_destroy(tz04_time_layer);
     text_layer_destroy(tz03_time_layer);
     text_layer_destroy(tz02_time_layer);
     text_layer_destroy(tz01_time_layer);
