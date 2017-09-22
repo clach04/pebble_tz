@@ -8,7 +8,8 @@
     "name": "pebble_tz",
     "pebble": {
         "capabilities": [
-            "configurable"
+            "configurable",
+            "health"
         ],
         "displayName": "pebble_tz",
         "enableMultiJS": true,
