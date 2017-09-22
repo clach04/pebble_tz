@@ -20,6 +20,8 @@ extern void setup_text_time(Window *window);
 
 #define INIT_TZ01_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
 #define INIT_TZ01_OFFSET (0 * 60)  // TODO document these are UTC (whole) hour offsets (not minutes) rather than names and thus not DST aware
+//#define INIT_TZ01_NAME "GMT+05:30 IST"  // has a half hour tz
+//#define INIT_TZ01_OFFSET (5 * 60 + 30)  // minutes and not DST aware
 
 #define INIT_TZ02_NAME "GMT-08"  // PST. PDT is GMT-07 and typically starts March, ends November
 #define INIT_TZ02_OFFSET (-8 * 60)
@@ -253,6 +255,7 @@ void update_tz_time(struct tm *tick_time)
     // FIXME above is true for non-APLITE platforms, but not for Aplite in CloudPebble Emulator.
     // This does NOT appear to be documented
 
+    utc_time=time(NULL);
     // Not supposd to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
     utc_time += (60 * settings.tz01_offset) + (60 * settings.local_offset_in_mins);
@@ -263,6 +266,7 @@ void update_tz_time(struct tm *tick_time)
     text_layer_set_text(tz01_time_layer, tz01_time_str);
 
 
+    utc_time = time(NULL);
     // Not supposd to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
     utc_time += (60 * settings.tz02_offset) + (60 * settings.local_offset_in_mins);
@@ -272,6 +276,7 @@ void update_tz_time(struct tm *tick_time)
 
     text_layer_set_text(tz02_time_layer, tz02_time_str);
 
+    utc_time = time(NULL);
     // Not supposd to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
     utc_time += (60 * settings.tz03_offset) + (60 * settings.local_offset_in_mins);
@@ -282,6 +287,7 @@ void update_tz_time(struct tm *tick_time)
 
     text_layer_set_text(tz03_time_layer, tz03_time_str);
 
+    utc_time = time(NULL); // TODO add to macro
     // TODO minute math, not just hours and seconds
 #define TZ_DO_TIME(TZ_MACRO)     utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins); utc_tm = gmtime(&utc_time); strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 

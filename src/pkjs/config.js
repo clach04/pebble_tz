@@ -76,7 +76,7 @@ module.exports = [
                 "label": "TZ2 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ02_UTC_OFFSET",
-                "defaultValue": +1,
+                "defaultValue": 60, // +1 * 60
                 "min": -720,
                 "max": +720,
                 "step": 1
@@ -123,7 +123,7 @@ module.exports = [
             },
             {
                 "type": "text",
-                "defaultValue": "GMT+01 == BST for UK or CET for Western Europe<br>GMT+00 == Winter time for UK or CET for Western Europe<br>GMT-07 == PDT typically starts March, ends November<br>GMT-08 == PST Pacific Standard Time (Winter)"
+                "defaultValue": "GMT+01 (60) == BST for UK or CET for Western Europe<br>GMT+00 == Winter time for UK or CET for Western Europe<br>GMT-07 (-420) == PDT typically starts March, ends November<br>GMT-08 (-480) == PST Pacific Standard Time (Winter)<br>GMT+5:30 (330) IST India time<br>GMT+8 (480) == Hong Kong time"
             },
         ]
     },
