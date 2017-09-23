@@ -14,7 +14,7 @@
 //#define USE_TIME_MACHINE  // NOTE mixing with DEBUG_TIME doesn't make sense
 
 // Show step count using builtin code
-#define USE_HEALTH
+//#define USE_HEALTH
 //#define UPDATE_HEALTH_ON_ACTIVITY  /* If not set, only updates step count display once per minute */
 
 #define BAT_FMT_STR "%d%%"
