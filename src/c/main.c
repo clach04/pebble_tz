@@ -105,22 +105,6 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         settings.tz01_offset = packet_get_integer(iterator, MESSAGE_KEY_TZ01_UTC_OFFSET);
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz1 offset: %d", settings.tz01_offset);
     }
-        
-    if(packet_contains_key(iterator, MESSAGE_KEY_TZ02_NAME))
-    {
-        strncpy(settings.tz02_name, packet_get_string(iterator, MESSAGE_KEY_TZ02_NAME), MAX_TZ_NAME_LEN);
-        if(!strcmp(settings.tz02_name, ""))
-        {
-            strcpy(settings.tz02_name, INIT_TZ02_NAME);
-        }
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz2 name: %s", settings.tz02_name);
-    }
-        
-    if(packet_contains_key(iterator, MESSAGE_KEY_TZ02_UTC_OFFSET))
-    {
-        settings.tz02_offset = packet_get_integer(iterator, MESSAGE_KEY_TZ02_UTC_OFFSET);
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz2 offset: %d", settings.tz02_offset);
-    }
 
 #define TZ_DO_SETTINGS(TZ_MACRO, MSG_TZ_MACRO)\
         if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME))\
@@ -138,6 +122,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
             APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " offset: %d", settings.TZ_MACRO ## _offset);\
         } 
 
+    TZ_DO_SETTINGS(tz02, TZ02)
     TZ_DO_SETTINGS(tz03, TZ03)
     TZ_DO_SETTINGS(tz04, TZ04)
     TZ_DO_SETTINGS(tz05, TZ05)
@@ -189,22 +174,6 @@ void setup_tz_text_time(Window *window)
     layer_add_child(window_get_root_layer(window), text_layer_get_layer(tz01_time_layer));
     // TODO two layers, one for text and one for time?
 
-    // Create time TextLayer
-    tz02_time_layer = text_layer_create(tz02_clock_pos);
-    text_layer_set_background_color(tz02_time_layer, GColorClear);
-    text_layer_set_text_color(tz02_time_layer, time_color);
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for tz2");
-    text_layer_set_text(tz02_time_layer, "00:00");
-
-    // Apply to TextLayer
-    text_layer_set_font(tz02_time_layer, fonts_get_system_font(TZ_FONT));
-    /* Consider GTextAlignmentLeft (with monospaced font) in cases where colon is proportional */
-    text_layer_set_text_alignment(tz02_time_layer, TZ_TIME_ALIGN);
-
-    // Add it as a child layer to the Window's root layer
-    layer_add_child(window_get_root_layer(window), text_layer_get_layer(tz02_time_layer));
-    // TODO two layers, one for text and one for time?
-
 // Create time TextLayer
 // Apply font settings to TextLayer
 // Add it as a child layer to the Window's root layer
@@ -216,6 +185,7 @@ void setup_tz_text_time(Window *window)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for macro " #TZ_MACRO);\
         text_layer_set_text(TZ_MACRO ## _time_layer, "00:00");  text_layer_set_font(TZ_MACRO ## _time_layer, fonts_get_system_font(TZ_FONT)); text_layer_set_text_alignment(TZ_MACRO ## _time_layer, TZ_TIME_ALIGN);  layer_add_child(window_get_root_layer(window), text_layer_get_layer(TZ_MACRO ## _time_layer));
 
+    TZ_TEXT_LAYER(tz02)
     TZ_TEXT_LAYER(tz03)
     TZ_TEXT_LAYER(tz04)
     TZ_TEXT_LAYER(tz05)
@@ -272,16 +242,6 @@ void update_tz_time(struct tm *tick_time)
     text_layer_set_text(tz01_time_layer, tz01_time_str);
 
 
-    utc_time = time(NULL);
-    // Not supposd to peak at a time_t but know it is number of seconds since epoc.
-    // So perform arithmetic on second s
-    utc_time += (60 * settings.tz02_offset) + (60 * settings.local_offset_in_mins);
-    utc_tm = gmtime(&utc_time);
-    strftime(buffer, sizeof(buffer), time_format, utc_tm);
-    snprintf(tz02_time_str, sizeof(tz02_time_str), "%s %s", buffer, settings.tz02_name);
-
-    text_layer_set_text(tz02_time_layer, tz02_time_str);
-
     // Not supposed to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
 #define TZ_DO_TIME(TZ_MACRO)\
@@ -292,6 +252,7 @@ void update_tz_time(struct tm *tick_time)
         snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name);\
         text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 
+TZ_DO_TIME(tz02)
 TZ_DO_TIME(tz03)
 TZ_DO_TIME(tz04)
 TZ_DO_TIME(tz05)
