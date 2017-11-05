@@ -46,7 +46,8 @@ module.exports = [
                 "label": "TZ1 name",
                 "description": "Name limited to 12 bytes", // TODO figure out reasonable length
                 "messageKey": "TZ01_NAME",
-                "defaultValue": "GMT-1",
+                //"defaultValue": "GMT-1",
+                "defaultValue": "Germany",
                 "attributes": {
                     "limit": 12
                 }
@@ -56,7 +57,8 @@ module.exports = [
                 "label": "TZ1 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ01_UTC_OFFSET",
-                "defaultValue": -60,  // -1 * 60
+                //"defaultValue": -60,  // -1 * 60
+                "defaultValue": +60,  // -1 * 60
                 "min": -720,  // -12 * 60 == 720 TODO consider supporting minute offsets (instead of integer hours)? E.g India, IST (UTC +5:30 == +330mins)
                 "max": +720,
                 "step": 1
@@ -66,7 +68,8 @@ module.exports = [
                 "label": "TZ2 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ02_NAME",
-                "defaultValue": "GMT+1",
+                //"defaultValue": "GMT+1",
+                "defaultValue": "GMT-0 UK win",
                 "attributes": {
                     "limit": 12
                 }
@@ -76,7 +79,8 @@ module.exports = [
                 "label": "TZ2 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ02_UTC_OFFSET",
-                "defaultValue": 60, // +1 * 60
+                //"defaultValue": 60, // +1 * 60
+                "defaultValue": 0, // +0 * 60
                 "min": -720,
                 "max": +720,
                 "step": 1
@@ -86,7 +90,8 @@ module.exports = [
                 "label": "TZ3 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ03_NAME",
-                "defaultValue": "GMT+8",
+                //"defaultValue": "GMT+8",
+                "defaultValue": "San Francisco",
                 "attributes": {
                     "limit": 12
                 }
@@ -96,7 +101,8 @@ module.exports = [
                 "label": "TZ3 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ03_UTC_OFFSET",
-                "defaultValue": +480,  // 8 * 60
+                //"defaultValue": +480,  // 8 * 60
+                "defaultValue": -480,  // 8 * 60
                 "min": -720,
                 "max": +720,
                 "step": 1
@@ -106,7 +112,8 @@ module.exports = [
                 "label": "TZ4 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ04_NAME",
-                "defaultValue": "GMT-8",
+                //"defaultValue": "GMT-8",
+                "defaultValue": "GMT+5:30 India",
                 "attributes": {
                     "limit": 12
                 }
@@ -116,7 +123,8 @@ module.exports = [
                 "label": "TZ4 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ04_UTC_OFFSET",
-                "defaultValue": -480,  // 8 * 60
+                //"defaultValue": -480,  // 8 * 60
+                "defaultValue": +330,  // 5 * 60 + 30
                 "min": -720,
                 "max": +720,
                 "step": 1
