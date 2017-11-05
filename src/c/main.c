@@ -143,13 +143,19 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 
 void setup_tz_text_time(Window *window)
 {
+#ifdef PBL_ROUND /* 180x180 */
+    #define CLOCK_X_POS 14
+#else // rect
+    #define CLOCK_X_POS 2
+#endif // rect
+
 #define TZ_START (73 - 15)
 #define TZ_SPACING 15
-#define tz01_clock_pos GRect(2, TZ_START, 180, 180)
-#define tz02_clock_pos GRect(2, TZ_START + TZ_SPACING, 180, 180)
-#define tz03_clock_pos GRect(2, TZ_START + (2 * TZ_SPACING), 180, 180)
-#define tz04_clock_pos GRect(2, TZ_START + (3 * TZ_SPACING), 180, 180)
-#define tz05_clock_pos GRect(2, TZ_START + (4 * TZ_SPACING), 180, 180)
+#define tz01_clock_pos GRect(CLOCK_X_POS, TZ_START, 180, 180)
+#define tz02_clock_pos GRect(CLOCK_X_POS, TZ_START + TZ_SPACING, 180, 180)
+#define tz03_clock_pos GRect(CLOCK_X_POS, TZ_START + (2 * TZ_SPACING), 180, 180)
+#define tz04_clock_pos GRect(CLOCK_X_POS, TZ_START + (3 * TZ_SPACING), 180, 180)
+#define tz05_clock_pos GRect(CLOCK_X_POS, TZ_START + (4 * TZ_SPACING), 180, 180)
 #define TZ_FONT FONT_DATE_SYSTEM_NAME
     
 #define TZ_TIME_ALIGN GTextAlignmentLeft

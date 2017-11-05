@@ -32,18 +32,18 @@
 
 #ifdef PBL_ROUND /* 180x180 */
 /*TODO center/move right*/
-    #define CLOCK_POS GRect(0, 52, 180, 180) /* probably taller than really needed */
+    #define CLOCK_POS GRect(0, 5, 180, 180) /* probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 180, 180)
     #define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
 
     #define DATE_ALIGN GTextAlignmentCenter
-    #define DATE_POS GRect(0, 120, 180, 180) /* probably taller than really needed */
+    #define DATE_POS GRect(0, 135, 180, 180) /* probably taller than really needed */
 
     #define BAT_ALIGN GTextAlignmentCenter
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
     #else
-        #define BAT_POS GRect(0, 140, 180, 180) /* probably taller than really needed */
+        #define BAT_POS GRect(0, 150, 180, 180) /* probably taller than really needed */
     #endif /* DRAW_BATTERY */
 
 #else /* PBL_RECT 144x168*/
