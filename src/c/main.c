@@ -302,9 +302,14 @@ void update_tz_time(struct tm *tick_time)
 
     text_layer_set_text(tz03_time_layer, tz03_time_str);
 
-    utc_time = time(NULL); // TODO add to macro
     // TODO minute math, not just hours and seconds
-#define TZ_DO_TIME(TZ_MACRO)     utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins); utc_tm = gmtime(&utc_time); strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
+#define TZ_DO_TIME(TZ_MACRO)\
+    utc_time = time(NULL);\
+    utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins);\
+    utc_tm = gmtime(&utc_time);\
+    strftime(buffer, sizeof(buffer), time_format, utc_tm);\
+    snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name);\
+    text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 
 TZ_DO_TIME(tz04)
 TZ_DO_TIME(tz05)
