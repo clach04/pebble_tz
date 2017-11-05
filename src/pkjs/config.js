@@ -47,7 +47,7 @@ module.exports = [
                 "description": "Name limited to 12 bytes", // TODO figure out reasonable length
                 "messageKey": "TZ01_NAME",
                 //"defaultValue": "GMT-1",
-                "defaultValue": "Germany",
+                "defaultValue": "GMT+1 Germany",
                 "attributes": {
                     "limit": 12
                 }
