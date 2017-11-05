@@ -19,10 +19,10 @@ extern void setup_text_time(Window *window);
 //FIXME
 
 #define INIT_TZ01_NAME "GMT+01"  // summer time for UK or Winter for Western Europe
-#define INIT_TZ01_OFFSET (+1 * 60)
+#define INIT_TZ01_OFFSET (+1 * 60)  // these are minutes offsets, NOT hours (rather than names) and thus not DST aware
 
 #define INIT_TZ02_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
-#define INIT_TZ02_OFFSET (0 * 60)  // TODO document these are UTC (whole) hour offsets (not minutes) rather than names and thus not DST aware
+#define INIT_TZ02_OFFSET (0 * 60)  //  zero
 
 #define INIT_TZ03_NAME "GMT-08"  // PST. PDT is GMT-07 and typically starts March, ends November
 #define INIT_TZ03_OFFSET (-8 * 60)
