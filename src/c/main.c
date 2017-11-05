@@ -122,22 +122,6 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz2 offset: %d", settings.tz02_offset);
     }
 
-    if(packet_contains_key(iterator, MESSAGE_KEY_TZ03_NAME))
-    {
-        strncpy(settings.tz03_name, packet_get_string(iterator, MESSAGE_KEY_TZ03_NAME), MAX_TZ_NAME_LEN);
-        if(!strcmp(settings.tz03_name, ""))
-        {
-            strcpy(settings.tz03_name, INIT_TZ03_NAME);
-        }
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz3 name: %s", settings.tz03_name);
-    }
-        
-    if(packet_contains_key(iterator, MESSAGE_KEY_TZ03_UTC_OFFSET))
-    {
-        settings.tz03_offset = packet_get_integer(iterator, MESSAGE_KEY_TZ03_UTC_OFFSET);
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz3 offset: %d", settings.tz03_offset);
-    }
-
 #define TZ_DO_SETTINGS(TZ_MACRO, MSG_TZ_MACRO)\
         if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME))\
         {\
@@ -154,6 +138,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
             APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " offset: %d", settings.TZ_MACRO ## _offset);\
         } 
 
+    TZ_DO_SETTINGS(tz03, TZ03)
     TZ_DO_SETTINGS(tz04, TZ04)
     TZ_DO_SETTINGS(tz05, TZ05)
 
@@ -220,23 +205,8 @@ void setup_tz_text_time(Window *window)
     layer_add_child(window_get_root_layer(window), text_layer_get_layer(tz02_time_layer));
     // TODO two layers, one for text and one for time?
 
-    // Create time TextLayer
-    tz03_time_layer = text_layer_create(tz03_clock_pos);
-    text_layer_set_background_color(tz03_time_layer, GColorClear);
-    text_layer_set_text_color(tz03_time_layer, time_color);
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for tz3");
-    text_layer_set_text(tz03_time_layer, "00:00");
-
-    // Apply to TextLayer
-    text_layer_set_font(tz03_time_layer, fonts_get_system_font(TZ_FONT));
-    /* Consider GTextAlignmentLeft (with monospaced font) in cases where colon is proportional */
-    text_layer_set_text_alignment(tz03_time_layer, TZ_TIME_ALIGN);
-
-    // Add it as a child layer to the Window's root layer
-    layer_add_child(window_get_root_layer(window), text_layer_get_layer(tz03_time_layer));
-    // TODO two layers, one for text and one for time?
-
 // Create time TextLayer
+// Apply font settings to TextLayer
 // Add it as a child layer to the Window's root layer
 // TODO two layers, one for text and one for time?
 #define TZ_TEXT_LAYER(TZ_MACRO)\
@@ -246,6 +216,7 @@ void setup_tz_text_time(Window *window)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for macro " #TZ_MACRO);\
         text_layer_set_text(TZ_MACRO ## _time_layer, "00:00");  text_layer_set_font(TZ_MACRO ## _time_layer, fonts_get_system_font(TZ_FONT)); text_layer_set_text_alignment(TZ_MACRO ## _time_layer, TZ_TIME_ALIGN);  layer_add_child(window_get_root_layer(window), text_layer_get_layer(TZ_MACRO ## _time_layer));
 
+    TZ_TEXT_LAYER(tz03)
     TZ_TEXT_LAYER(tz04)
     TZ_TEXT_LAYER(tz05)
 }
