@@ -130,6 +130,26 @@ module.exports = [
                 "step": 1
             },
             {
+                "type": "input",
+                "label": "TZ5 name",
+                "description": "Name limited to 12 bytes",
+                "messageKey": "TZ05_NAME",
+                "defaultValue": "GMT+8 Hong Kong",
+                "attributes": {
+                    "limit": 12
+                }
+            },
+            {
+                "type": "slider",
+                "label": "TZ5 UTC offset",
+                "description": "UTC offset (whole minutes only)",
+                "messageKey": "TZ04_UTC_OFFSET",
+                "defaultValue": +480,  // +8 * 60
+                "min": -720,
+                "max": +720,
+                "step": 1
+            },
+            {
                 "type": "text",
                 "defaultValue": "GMT+01 (60) == BST for UK or CET for Western Europe<br>GMT+00 == Winter time for UK or CET for Western Europe<br>GMT-07 (-420) == PDT typically starts March, ends November<br>GMT-08 (-480) == PST Pacific Standard Time (Winter)<br>GMT+5:30 (330) IST India time<br>GMT+8 (480) == Hong Kong time"
             },

@@ -32,6 +32,9 @@ extern void setup_text_time(Window *window);
 #define INIT_TZ04_NAME "GMT+01"  // summer time for UK or Winter for Western Europe
 #define INIT_TZ04_OFFSET (+1 * 60)
 
+#define INIT_TZ05_NAME "GMT+05:30"  // India
+#define INIT_TZ05_OFFSET (+330)
+
 
 //#define MAX_TZ_NAME_LEN 6 // Long enough for "GMT-xx"
 #define MAX_TZ_NAME_LEN 12  // Long enough for "timezonename"
@@ -44,6 +47,8 @@ typedef struct persist {
     int tz03_offset;
     char tz04_name[MAX_TZ_NAME_LEN+1];
     int tz04_offset;
+    char tz05_name[MAX_TZ_NAME_LEN+1];
+    int tz05_offset;
     // Aplite times are all base on local time so need to know local offset, for later platforms this is always zero
     int local_offset_in_mins;  // zero for non-Aplite devices
 } __attribute__((__packed__)) persist;
@@ -57,6 +62,8 @@ persist settings = {
     .tz03_offset = INIT_TZ03_OFFSET,
     .tz04_name = INIT_TZ04_NAME,
     .tz04_offset = INIT_TZ04_OFFSET,
+    .tz05_name = INIT_TZ05_NAME,
+    .tz05_offset = INIT_TZ05_OFFSET,
     .local_offset_in_mins = 0,  // This will be calculated and sent from javascript on phone
 };
 
@@ -64,6 +71,7 @@ TextLayer *tz01_time_layer=NULL;
 TextLayer *tz02_time_layer=NULL;
 TextLayer *tz03_time_layer=NULL;
 TextLayer *tz04_time_layer=NULL;
+TextLayer *tz05_time_layer=NULL;
 
 void update_tz_time(struct tm *tick_time);
 
@@ -133,6 +141,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 #define TZ_DO_SETTINGS(TZ_MACRO, MSG_TZ_MACRO) if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME)) { strncpy(settings.TZ_MACRO ## _name, packet_get_string(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME), MAX_TZ_NAME_LEN); if(!strcmp(settings.TZ_MACRO ## _name, "")) { strcpy(settings.TZ_MACRO ## _name, INIT_## MSG_TZ_MACRO ##_NAME); } APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz3 name: %s", settings.TZ_MACRO ## _name); } if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET)) { settings.TZ_MACRO ## _offset = packet_get_integer(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET); APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz3 offset: %d", settings.TZ_MACRO ## _offset); } 
 
     TZ_DO_SETTINGS(tz04, TZ04)
+    TZ_DO_SETTINGS(tz05, TZ05)
 
     value_written = persist_write_data(MESSAGE_KEY_PEBBLE_SETTINGS, &settings, sizeof(settings));
     APP_LOG(APP_LOG_LEVEL_DEBUG, "write settings: %d", value_written);
@@ -152,11 +161,13 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
 
 void setup_tz_text_time(Window *window)
 {
+#define TZ_START (73 - 15)
 #define TZ_SPACING 15
-#define tz01_clock_pos GRect(2, 73, 180, 180)
-#define tz02_clock_pos GRect(2, 73 + TZ_SPACING, 180, 180)
-#define tz03_clock_pos GRect(2, 73 + (2 * TZ_SPACING), 180, 180)
-#define tz04_clock_pos GRect(2, 73 + (3 * TZ_SPACING), 180, 180)
+#define tz01_clock_pos GRect(2, TZ_START, 180, 180)
+#define tz02_clock_pos GRect(2, TZ_START + TZ_SPACING, 180, 180)
+#define tz03_clock_pos GRect(2, TZ_START + (2 * TZ_SPACING), 180, 180)
+#define tz04_clock_pos GRect(2, TZ_START + (3 * TZ_SPACING), 180, 180)
+#define tz05_clock_pos GRect(2, TZ_START + (4 * TZ_SPACING), 180, 180)
 #define TZ_FONT FONT_DATE_SYSTEM_NAME
     
 #define TZ_TIME_ALIGN GTextAlignmentLeft
@@ -216,11 +227,13 @@ void setup_tz_text_time(Window *window)
 #define TZ_TEXT_LAYER(TZ_MACRO) TZ_MACRO ## _time_layer = text_layer_create(TZ_MACRO ## _clock_pos); text_layer_set_background_color(TZ_MACRO ## _time_layer, GColorClear); text_layer_set_text_color(TZ_MACRO ## _time_layer, time_color); APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for tz3"); text_layer_set_text(TZ_MACRO ## _time_layer, "00:00");  text_layer_set_font(TZ_MACRO ## _time_layer, fonts_get_system_font(TZ_FONT)); text_layer_set_text_alignment(TZ_MACRO ## _time_layer, TZ_TIME_ALIGN);  layer_add_child(window_get_root_layer(window), text_layer_get_layer(TZ_MACRO ## _time_layer)); 
 
     TZ_TEXT_LAYER(tz04)
+    TZ_TEXT_LAYER(tz05)
 }
 
 void cleanup_tz_text_time()
 {
     /* Destroy TextLayers */
+    text_layer_destroy(tz05_time_layer);
     text_layer_destroy(tz04_time_layer);
     text_layer_destroy(tz03_time_layer);
     text_layer_destroy(tz02_time_layer);
@@ -237,6 +250,7 @@ void update_tz_time(struct tm *tick_time)
     static char tz02_time_str[MAX_TZ_NAME_LEN+1 + sizeof("00:00")] = "GMT-00 00:00";  // need one string per layer, reusing same buffer results in same text
     static char tz03_time_str[MAX_TZ_NAME_LEN+1 + sizeof("00:00")] = "GMT-00 00:00";  // need one string per layer, reusing same buffer results in same text
     static char tz04_time_str[MAX_TZ_NAME_LEN+1 + sizeof("00:00")] = "GMT-00 00:00";  // need one string per layer, reusing same buffer results in same text
+    static char tz05_time_str[MAX_TZ_NAME_LEN+1 + sizeof("00:00")] = "GMT-00 00:00";  // need one string per layer, reusing same buffer results in same text
     char *time_format=NULL;
     time_t utc_time=time(NULL);
     struct tm *utc_tm=NULL;
@@ -293,6 +307,7 @@ void update_tz_time(struct tm *tick_time)
 #define TZ_DO_TIME(TZ_MACRO)     utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins); utc_tm = gmtime(&utc_time); strftime(buffer, sizeof(buffer), time_format, utc_tm); snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name); text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 
 TZ_DO_TIME(tz04)
+TZ_DO_TIME(tz05)
 
     // mark dirty?
 }
