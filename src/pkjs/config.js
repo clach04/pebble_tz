@@ -112,7 +112,6 @@ module.exports = [
                 "label": "TZ4 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ04_NAME",
-                //"defaultValue": "GMT-8",
                 "defaultValue": "GMT+5:30 India",
                 "attributes": {
                     "limit": 12
@@ -123,7 +122,6 @@ module.exports = [
                 "label": "TZ4 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ04_UTC_OFFSET",
-                //"defaultValue": -480,  // 8 * 60
                 "defaultValue": +330,  // 5 * 60 + 30
                 "min": -720,
                 "max": +720,
@@ -143,7 +141,7 @@ module.exports = [
                 "type": "slider",
                 "label": "TZ5 UTC offset",
                 "description": "UTC offset (whole minutes only)",
-                "messageKey": "TZ04_UTC_OFFSET",
+                "messageKey": "TZ05_UTC_OFFSET",
                 "defaultValue": +480,  // +8 * 60
                 "min": -720,
                 "max": +720,

@@ -138,7 +138,21 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz3 offset: %d", settings.tz03_offset);
     }
 
-#define TZ_DO_SETTINGS(TZ_MACRO, MSG_TZ_MACRO) if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME)) { strncpy(settings.TZ_MACRO ## _name, packet_get_string(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME), MAX_TZ_NAME_LEN); if(!strcmp(settings.TZ_MACRO ## _name, "")) { strcpy(settings.TZ_MACRO ## _name, INIT_## MSG_TZ_MACRO ##_NAME); } APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz3 name: %s", settings.TZ_MACRO ## _name); } if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET)) { settings.TZ_MACRO ## _offset = packet_get_integer(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET); APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz3 offset: %d", settings.TZ_MACRO ## _offset); } 
+#define TZ_DO_SETTINGS(TZ_MACRO, MSG_TZ_MACRO)\
+        if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME))\
+        {\
+            strncpy(settings.TZ_MACRO ## _name, packet_get_string(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_NAME), MAX_TZ_NAME_LEN);\
+                if(!strcmp(settings.TZ_MACRO ## _name, ""))\
+                {\
+                    strcpy(settings.TZ_MACRO ## _name, INIT_## MSG_TZ_MACRO ##_NAME);\
+                }\
+            APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " name: %s", settings.TZ_MACRO ## _name);\
+        }\
+        if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET)) \
+        {\
+            settings.TZ_MACRO ## _offset = packet_get_integer(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET);\
+            APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " offset: %d", settings.TZ_MACRO ## _offset);\
+        } 
 
     TZ_DO_SETTINGS(tz04, TZ04)
     TZ_DO_SETTINGS(tz05, TZ05)
@@ -178,6 +192,7 @@ void setup_tz_text_time(Window *window)
     tz01_time_layer = text_layer_create(tz01_clock_pos);
     text_layer_set_background_color(tz01_time_layer, GColorClear);
     text_layer_set_text_color(tz01_time_layer, time_color);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for tz1");
     text_layer_set_text(tz01_time_layer, "00:00");
 
     // Apply to TextLayer
@@ -224,7 +239,12 @@ void setup_tz_text_time(Window *window)
 // Create time TextLayer
 // Add it as a child layer to the Window's root layer
 // TODO two layers, one for text and one for time?
-#define TZ_TEXT_LAYER(TZ_MACRO) TZ_MACRO ## _time_layer = text_layer_create(TZ_MACRO ## _clock_pos); text_layer_set_background_color(TZ_MACRO ## _time_layer, GColorClear); text_layer_set_text_color(TZ_MACRO ## _time_layer, time_color); APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for tz3"); text_layer_set_text(TZ_MACRO ## _time_layer, "00:00");  text_layer_set_font(TZ_MACRO ## _time_layer, fonts_get_system_font(TZ_FONT)); text_layer_set_text_alignment(TZ_MACRO ## _time_layer, TZ_TIME_ALIGN);  layer_add_child(window_get_root_layer(window), text_layer_get_layer(TZ_MACRO ## _time_layer)); 
+#define TZ_TEXT_LAYER(TZ_MACRO)\
+        TZ_MACRO ## _time_layer = text_layer_create(TZ_MACRO ## _clock_pos);\
+        text_layer_set_background_color(TZ_MACRO ## _time_layer, GColorClear);\
+        text_layer_set_text_color(TZ_MACRO ## _time_layer, time_color);\
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "setup_tz_text_time() about to set time for macro " #TZ_MACRO);\
+        text_layer_set_text(TZ_MACRO ## _time_layer, "00:00");  text_layer_set_font(TZ_MACRO ## _time_layer, fonts_get_system_font(TZ_FONT)); text_layer_set_text_alignment(TZ_MACRO ## _time_layer, TZ_TIME_ALIGN);  layer_add_child(window_get_root_layer(window), text_layer_get_layer(TZ_MACRO ## _time_layer));
 
     TZ_TEXT_LAYER(tz04)
     TZ_TEXT_LAYER(tz05)
@@ -271,7 +291,7 @@ void update_tz_time(struct tm *tick_time)
     // This does NOT appear to be documented
 
     utc_time=time(NULL);
-    // Not supposd to peak at a time_t but know it is number of seconds since epoc.
+    // Not supposed to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
     utc_time += (60 * settings.tz01_offset) + (60 * settings.local_offset_in_mins);
     utc_tm = gmtime(&utc_time);
@@ -291,26 +311,17 @@ void update_tz_time(struct tm *tick_time)
 
     text_layer_set_text(tz02_time_layer, tz02_time_str);
 
-    utc_time = time(NULL);
-    // Not supposd to peak at a time_t but know it is number of seconds since epoc.
+    // Not supposed to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
-    utc_time += (60 * settings.tz03_offset) + (60 * settings.local_offset_in_mins);
-    utc_tm = gmtime(&utc_time);
-
-    strftime(buffer, sizeof(buffer), time_format, utc_tm);
-    snprintf(tz03_time_str, sizeof(tz03_time_str), "%s %s", buffer, settings.tz03_name);
-
-    text_layer_set_text(tz03_time_layer, tz03_time_str);
-
-    // TODO minute math, not just hours and seconds
 #define TZ_DO_TIME(TZ_MACRO)\
-    utc_time = time(NULL);\
-    utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins);\
-    utc_tm = gmtime(&utc_time);\
-    strftime(buffer, sizeof(buffer), time_format, utc_tm);\
-    snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name);\
-    text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
+        utc_time = time(NULL);\
+        utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins);\
+        utc_tm = gmtime(&utc_time);\
+        strftime(buffer, sizeof(buffer), time_format, utc_tm);\
+        snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name);\
+        text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
 
+TZ_DO_TIME(tz03)
 TZ_DO_TIME(tz04)
 TZ_DO_TIME(tz05)
 
