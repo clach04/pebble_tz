@@ -18,22 +18,20 @@ extern void cleanup_text_time();
 extern void setup_text_time(Window *window);
 //FIXME
 
-#define INIT_TZ01_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
-#define INIT_TZ01_OFFSET (0 * 60)  // TODO document these are UTC (whole) hour offsets (not minutes) rather than names and thus not DST aware
-//#define INIT_TZ01_NAME "GMT+05:30 IST"  // has a half hour tz
-//#define INIT_TZ01_OFFSET (5 * 60 + 30)  // minutes and not DST aware
+#define INIT_TZ01_NAME "GMT+01"  // summer time for UK or Winter for Western Europe
+#define INIT_TZ01_OFFSET (+1 * 60)
 
-#define INIT_TZ02_NAME "GMT-08"  // PST. PDT is GMT-07 and typically starts March, ends November
-#define INIT_TZ02_OFFSET (-8 * 60)
+#define INIT_TZ02_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
+#define INIT_TZ02_OFFSET (0 * 60)  // TODO document these are UTC (whole) hour offsets (not minutes) rather than names and thus not DST aware
 
-#define INIT_TZ03_NAME "GMT+08"  // HKT - no DST for Hong Kong
-#define INIT_TZ03_OFFSET (+8 * 60)
+#define INIT_TZ03_NAME "GMT-08"  // PST. PDT is GMT-07 and typically starts March, ends November
+#define INIT_TZ03_OFFSET (-8 * 60)
 
-#define INIT_TZ04_NAME "GMT+01"  // summer time for UK or Winter for Western Europe
-#define INIT_TZ04_OFFSET (+1 * 60)
+#define INIT_TZ04_NAME "GMT+05:30"  // India, has a half hour tz and not DST aware
+#define INIT_TZ04_OFFSET (+330)
 
-#define INIT_TZ05_NAME "GMT+05:30"  // India
-#define INIT_TZ05_OFFSET (+330)
+#define INIT_TZ05_NAME "GMT+08"  // HKT - no DST for Hong Kong
+#define INIT_TZ05_OFFSET (+8 * 60)
 
 
 //#define MAX_TZ_NAME_LEN 6 // Long enough for "GMT-xx"
