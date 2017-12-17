@@ -52,7 +52,7 @@
     #define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
     #define DATE_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
     //#define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 168 - (2 * 30 + 4), 20, 30)
-    #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 90, 20, 30)
+    #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 30, 20, 30)
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, 144, 168)
     #else
