@@ -28,13 +28,13 @@
 #define BT_DISCONNECT_IMAGE RESOURCE_ID_IMAGE_BT_DISCONNECT
 
 #define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
-#define QUIET_TIME_IMAGE_GRECT GRect(3, 60, 17, 17)  // 17x17 image
 
 #ifdef PBL_ROUND /* 180x180 */
-/*TODO center/move right*/
+    #define QUIET_TIME_IMAGE_GRECT GRect(17, 48, 17, 17)  // TODO consider placing in top of screen/circle
     #define CLOCK_POS GRect(0, 5, 180, 180) /* probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 180, 180)
-    #define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
+    //#define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
+    #define BT_DISCONNECT_IMAGE_GRECT GRect(148, 47, 18, 22)  // TODO consider placing in top of screen/circle
 
     #define DATE_ALIGN GTextAlignmentCenter
     #define DATE_POS GRect(0, 135, 180, 180) /* probably taller than really needed */
@@ -47,12 +47,13 @@
     #endif /* DRAW_BATTERY */
 
 #else /* PBL_RECT 144x168*/
+    #define QUIET_TIME_IMAGE_GRECT GRect(3, 35, 17, 17)  // 17x17 image
+
     #define CLOCK_POS GRect(0, -15, 144, 168) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 144, 168)
-    #define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
     #define DATE_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
-    //#define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 168 - (2 * 30 + 4), 20, 30)
-    #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 90, 20, 30)
+    //#define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
+    #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 35, 18, 22)
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, 144, 168)
     #else
@@ -63,4 +64,9 @@
 /* for screen shots and font testing
 #define DEBUG_TIME
 #define DEBUG_TIME_SCREENSHOT
- */
+// ensure quiet time and bluetooth disconnection info is shown
+#ifndef quiet_time_is_active  // so not aplite
+#define quiet_time_is_active() true  // DEBUG!
+#endif
+#define bluetooth_connection_service_peek() false  // DEBUG!
+*/
