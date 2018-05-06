@@ -1,5 +1,7 @@
 #pragma once
 
+#define USE_MAX_MESSAGE_SIZE  // for nowuse this, without 6 timezones is bigger than 200, TODO set max_in only
+
 //#define USE_GENERIC_MAIN
 
 #define CUSTOM_IN_RECV_HANDLER tz_config_handler
