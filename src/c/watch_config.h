@@ -55,8 +55,8 @@
     #define HEALTH_POS GRect(0, 40, 144, 168)
 
     //#define DATE_POS GRect(0, 140, 144, 168) /* bottom right hand side (covered by quick view) */
-    #define DATE_ALIGN GTextAlignmentCenter
-    #define DATE_POS GRect(0, 35, 144, 168) /* try for near top/center, want centered */
+    #define DATE_ALIGN GTextAlignmentCenter  // TODO make left then math will be easier below!
+    #define DATE_POS GRect(12, 35, 144, 168) /* try for near top/center, want almost centered */
     //#define DATE_POS GRect(0, 40, 144, 168) /* try for near top/center, want centered */
 
     //#define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
@@ -64,7 +64,8 @@
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, 144, 168)
     #else
-        #define BAT_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
+        //#define BAT_POS GRect(0, 140, 144, 168) /* bottom left hand side (covered by quick view) */
+        #define BAT_POS GRect(14+3+1, 35, 144, 168) /* 14 is quiet time icon size */
     #endif /* DRAW_BATTERY */
 #endif /* end of Round or rectangle */
 
