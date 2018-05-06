@@ -53,7 +53,12 @@
 
     #define CLOCK_POS GRect(0, -15, 144, 168) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 144, 168)
-    #define DATE_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
+
+    //#define DATE_POS GRect(0, 140, 144, 168) /* bottom right hand side (covered by quick view) */
+    #define DATE_ALIGN GTextAlignmentCenter
+    #define DATE_POS GRect(0, 35, 144, 168) /* try for near top/center, want centered */
+    //#define DATE_POS GRect(0, 40, 144, 168) /* try for near top/center, want centered */
+
     //#define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
     #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 35, 18, 22)
     #ifdef DRAW_BATTERY
