@@ -134,6 +134,16 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
     TZ_DO_SETTINGS(tz05, TZ05)
     TZ_DO_SETTINGS(tz06, TZ06)
 
+#define TZ_TEXT_LAYER_COLOR_SET(TZ_MACRO)\
+        text_layer_set_text_color(TZ_MACRO ## _time_layer, time_color);
+
+    TZ_TEXT_LAYER_COLOR_SET(tz01)
+    TZ_TEXT_LAYER_COLOR_SET(tz02)
+    TZ_TEXT_LAYER_COLOR_SET(tz03)
+    TZ_TEXT_LAYER_COLOR_SET(tz04)
+    TZ_TEXT_LAYER_COLOR_SET(tz05)
+    TZ_TEXT_LAYER_COLOR_SET(tz06)
+
     value_written = persist_write_data(MESSAGE_KEY_PEBBLE_SETTINGS, &settings, sizeof(settings));
     APP_LOG(APP_LOG_LEVEL_DEBUG, "write settings: %d", value_written);
     if (value_written >= 0)  // TODO compare with sizeof()?
