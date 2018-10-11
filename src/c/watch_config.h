@@ -1,5 +1,7 @@
 #pragma once
 
+#define USE_MAX_MESSAGE_SIZE  // for nowuse this, without 6 timezones is bigger than 200, TODO set max_in only
+
 //#define USE_GENERIC_MAIN
 
 #define CUSTOM_IN_RECV_HANDLER tz_config_handler
@@ -47,17 +49,23 @@
     #endif /* DRAW_BATTERY */
 
 #else /* PBL_RECT 144x168*/
-    #define QUIET_TIME_IMAGE_GRECT GRect(3, 35, 17, 17)  // 17x17 image
+    #define QUIET_TIME_IMAGE_GRECT GRect(3, 35+3, 17, 17)  // 17x17 image
 
     #define CLOCK_POS GRect(0, -15, 144, 168) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
     #define HEALTH_POS GRect(0, 40, 144, 168)
-    #define DATE_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
+
+    //#define DATE_POS GRect(0, 140, 144, 168) /* bottom right hand side (covered by quick view) */
+    #define DATE_ALIGN GTextAlignmentCenter  // TODO make left then math will be easier below!
+    #define DATE_POS GRect(12, 35, 144, 168) /* try for near top/center, want almost centered */
+    //#define DATE_POS GRect(0, 40, 144, 168) /* try for near top/center, want centered */
+
     //#define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
     #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20, 35, 18, 22)
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, 144, 168)
     #else
-        #define BAT_POS GRect(0, 140, 144, 168) /* probably taller than really needed */
+        //#define BAT_POS GRect(0, 140, 144, 168) /* bottom left hand side (covered by quick view) */
+        #define BAT_POS GRect(14+3+1, 35, 144, 168) /* 14 is quiet time icon size */
     #endif /* DRAW_BATTERY */
 #endif /* end of Round or rectangle */
 
