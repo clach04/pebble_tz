@@ -1,6 +1,8 @@
 Pebble Watchface For Multiple Timezones
 =======================================
 
+PBW binaries available at https://github.com/clach04/pebble_tz/releases
+
   * Display time, updating once per minute, using system font
   * Display Battery power
   * Display notice when Bluetooth is disconnected
