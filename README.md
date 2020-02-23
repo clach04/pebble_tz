@@ -11,7 +11,7 @@ PBW binaries available at https://github.com/clach04/pebble_tz/releases
       * Background color
       * Optional vibrate on Bluetooth disconnect (default is do not vibrate), if enabled does not vibrate during quiet time
       * Offline config support, no need for internet access, so timezones can be updated whilst travelling
-      * 6 timezone names and offsets (in minutes, to support partial hour offsets, like India). No DST support.
+      * 7 timezone names and offsets (in minutes, to support partial hour offsets, like India). No DST support.
 
 With configuration and settings support via [Clay](https://github.com/pebble/clay).
 

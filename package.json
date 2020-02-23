@@ -30,7 +30,9 @@
             "TZ05_NAME",
             "TZ05_UTC_OFFSET",
             "TZ06_NAME",
-            "TZ06_UTC_OFFSET"
+            "TZ06_UTC_OFFSET",
+            "TZ07_NAME",
+            "TZ07_UTC_OFFSET"
         ],
         "projectType": "native",
         "resources": {
