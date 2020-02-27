@@ -13,9 +13,13 @@ PBW binaries available at https://github.com/clach04/pebble_tz/releases
       * Offline config support, no need for internet access, so timezones can be updated whilst travelling
       * 7 timezone names and offsets (in minutes, to support partial hour offsets, like India). No DST support.
 
-With configuration and settings support via [Clay](https://github.com/pebble/clay).
+<img src="assets/screenshot_7_zones.png" alt="7 Time Zone Pebble screenshot"> 
 
-Built with https://github/clach04/watchface_framework/
+
+
+With configuration and settings support via [Clay](https://github.com/clach04/pebble-clay/tree/clach04_emulator_url_index).
+
+Built with https://github.com/clach04/pebble_watchface_framework/
 
 Import into CloudPebble by clicking https://cloudpebble.net/ide/import/github/clach04/pebble_tz/
 
