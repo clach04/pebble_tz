@@ -22,3 +22,5 @@ Import into CloudPebble by clicking https://cloudpebble.net/ide/import/github/cl
 Using local Pebble SDK also requires node (due to Clay), under Ubuntu:
 
     sudo apt install nodejs-legacy
+
+App aicon from <a href="http://getdrawings.com/world-icon-png">World Icon Png</a>
