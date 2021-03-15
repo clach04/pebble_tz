@@ -5,12 +5,12 @@
         "pebble-packet": "^1.3.2"
     },
     "keywords": [],
-    "name": "pebble_tz",
+    "name": "pebble_tzC",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "pebble_tz",
+        "displayName": "pebble_tzC",
         "enableMultiJS": true,
         "messageKeys": [
             "TIME_COLOR",
@@ -65,7 +65,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "2dd4b01a-fa81-4ec2-a4a8-52e94cdeb030",
+        "uuid": "2dd4b01a-fa81-4ec2-a4a8-52e94cdeb031",
         "watchapp": {
             "watchface": true
         }
