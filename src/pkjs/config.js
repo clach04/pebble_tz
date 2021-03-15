@@ -47,7 +47,7 @@ module.exports = [
                 "description": "Name limited to 12 bytes", // TODO figure out reasonable length
                 "messageKey": "TZ01_NAME",
                 //"defaultValue": "GMT-1",
-                "defaultValue": "GMT+1 Germany",
+                "defaultValue": "GMT+5:30 India",
                 "attributes": {
                     "limit": 12
                 }
@@ -57,7 +57,7 @@ module.exports = [
                 "label": "TZ1 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ01_UTC_OFFSET",
-                "defaultValue": "60",  // -1 * 60
+                "defaultValue": "330",  // 5 * 60 + 30
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
@@ -108,7 +108,7 @@ module.exports = [
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ02_NAME",
                 //"defaultValue": "GMT+1",
-                "defaultValue": "GMT-0 UK win",
+                "defaultValue": "GMT+1 Germany",
                 "attributes": {
                     "limit": 12
                 }
@@ -118,7 +118,7 @@ module.exports = [
                 "label": "TZ2 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ02_UTC_OFFSET",
-                "defaultValue": "0", // +0 * 60
+                "defaultValue": "60",  // -1 * 60
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
@@ -168,8 +168,7 @@ module.exports = [
                 "label": "TZ3 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ03_NAME",
-                //"defaultValue": "GMT+8",
-                "defaultValue": "San Francisco",
+                "defaultValue": "UK DST",
                 "attributes": {
                     "limit": 12
                 }
@@ -179,8 +178,7 @@ module.exports = [
                 "label": "TZ3 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ03_UTC_OFFSET",
-                //"defaultValue": +480,  // 8 * 60
-                "defaultValue": "-480",  // 8 * 60
+                "defaultValue": "0", // +0 * 60
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
@@ -230,7 +228,7 @@ module.exports = [
                 "label": "TZ4 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ04_NAME",
-                "defaultValue": "GMT+5:30 India",
+                "defaultValue": "New York",
                 "attributes": {
                     "limit": 12
                 }
@@ -240,7 +238,7 @@ module.exports = [
                 "label": "TZ4 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ04_UTC_OFFSET",
-                "defaultValue": "330",  // 5 * 60 + 30
+                "defaultValue": "-240",  // -4 * 60
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
@@ -290,7 +288,7 @@ module.exports = [
                 "label": "TZ5 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ05_NAME",
-                "defaultValue": "GMT+8 Hong Kong",
+                "defaultValue": "Austin",
                 "attributes": {
                     "limit": 12
                 }
@@ -300,7 +298,7 @@ module.exports = [
                 "label": "TZ5 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ05_UTC_OFFSET",
-                "defaultValue": "480",  // +8 * 60
+                "defaultValue": "300",  // -5 * 60
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
@@ -350,7 +348,8 @@ module.exports = [
                 "label": "TZ6 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ06_NAME",
-                "defaultValue": "GMT+8 Hong Kong",
+                //"defaultValue": "GMT+8",
+                "defaultValue": "San Francisco",
                 "attributes": {
                     "limit": 12
                 }
@@ -360,7 +359,8 @@ module.exports = [
                 "label": "TZ6 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ06_UTC_OFFSET",
-                "defaultValue": "480",  // +8 * 60
+                "defaultValue": "-420",  // 7 * 60
+                //"defaultValue": "-480",  // 8 * 60  -- DST
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
@@ -410,7 +410,7 @@ module.exports = [
                 "label": "TZ7 name",
                 "description": "Name limited to 12 bytes",
                 "messageKey": "TZ07_NAME",
-                "defaultValue": "GMT-6 Austin",
+                "defaultValue": "GMT+8 Hong Kong",
                 "attributes": {
                     "limit": 12
                 }
@@ -420,7 +420,7 @@ module.exports = [
                 "label": "TZ7 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ07_UTC_OFFSET",
-                "defaultValue": "-360",  // -6 * 60
+                "defaultValue": "480",  // +8 * 60
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
