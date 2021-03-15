@@ -298,7 +298,7 @@ module.exports = [
                 "label": "TZ5 UTC offset",
                 "description": "UTC offset (whole minutes only)",
                 "messageKey": "TZ05_UTC_OFFSET",
-                "defaultValue": "300",  // -5 * 60
+                "defaultValue": "-300",  // -5 * 60
                 "options": [
                     {"label": "-12:00", "value": "-720" },
                     {"label": "-11:00", "value": "-660" },
