@@ -1,5 +1,6 @@
 var Clay = require('pebble-clay');
 var clayConfig = require('./config');
+var messageKeys = require('message_keys');
 var clay = new Clay(clayConfig, null, { autoHandleEvents: false });
 
 Pebble.addEventListener('ready', function(e) {
@@ -32,26 +33,23 @@ Pebble.addEventListener('webviewclosed', function(e) {
     return;
   }
 
+  //console.log('e type ' + typeof(e)); // type object
+  //console.log('e.response type ' + typeof(e.response));  // type string, contains json payload
+
   // Get the keys and values from each config item
-  var dict = clay.getSettings(e.response);
+  var dict = clay.getSettings(e.response);  // this is a dict, but the keys are numeric
+  //console.log(JSON.stringify(dict));
 
   // hack offsets to be integer
-  // dict.THING = parseInt(dict.THING)
-  // TZ01_UTC_OFFSET
-  // TZ02_UTC_OFFSET
-  // TZ03_UTC_OFFSET
-  // TZ04_UTC_OFFSET
-  // TZ05_UTC_OFFSET
-  // TZ06_UTC_OFFSET
-  // TZ07_UTC_OFFSET
   // TODO loop though instead of hard coded?
-  dict.TZ01_UTC_OFFSET = parseInt(dict.TZ01_UTC_OFFSET);
-  dict.TZ02_UTC_OFFSET = parseInt(dict.TZ02_UTC_OFFSET);
-  dict.TZ03_UTC_OFFSET = parseInt(dict.TZ03_UTC_OFFSET);
-  dict.TZ04_UTC_OFFSET = parseInt(dict.TZ04_UTC_OFFSET);
-  dict.TZ05_UTC_OFFSET = parseInt(dict.TZ05_UTC_OFFSET);
-  dict.TZ06_UTC_OFFSET = parseInt(dict.TZ06_UTC_OFFSET);
-  dict.TZ07_UTC_OFFSET = parseInt(dict.TZ07_UTC_OFFSET);
+  dict[messageKeys.TZ01_UTC_OFFSET] = parseInt(dict[messageKeys.TZ01_UTC_OFFSET]);
+  dict[messageKeys.TZ02_UTC_OFFSET] = parseInt(dict[messageKeys.TZ02_UTC_OFFSET]);
+  dict[messageKeys.TZ03_UTC_OFFSET] = parseInt(dict[messageKeys.TZ03_UTC_OFFSET]);
+  dict[messageKeys.TZ04_UTC_OFFSET] = parseInt(dict[messageKeys.TZ04_UTC_OFFSET]);
+  dict[messageKeys.TZ05_UTC_OFFSET] = parseInt(dict[messageKeys.TZ05_UTC_OFFSET]);
+  dict[messageKeys.TZ06_UTC_OFFSET] = parseInt(dict[messageKeys.TZ06_UTC_OFFSET]);
+  dict[messageKeys.TZ07_UTC_OFFSET] = parseInt(dict[messageKeys.TZ07_UTC_OFFSET]);
+  //console.log(JSON.stringify(dict));
 
   // Send settings values to watch side
   Pebble.sendAppMessage(dict, function(e) {
