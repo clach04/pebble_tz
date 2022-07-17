@@ -28,4 +28,4 @@ jobs:
       - name: PebbleBuild
         # You may pin to the exact commit or the version.
         # uses: clach04/github_action_pebble_build@2352c851e59962ab4bcf1e70029feeea81d13098
-        uses: clach04/github_action_pebble_build@0.0.0
+        uses: clach04/github_action_pebble_build@0.0.1
