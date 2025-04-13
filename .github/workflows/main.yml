@@ -1,38 +1,62 @@
-# meta https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
+# From https://github.com/clach04/github_action_pebble_build/
 name: PebbleBuild
-#description: Builds Pebble Apps and Watchfaces with Rebble/Pebble SDK v4.5
-# from https://github.com/clach04/github_action_pebble_build
-#branding:
-#  icon: watch
-#  color: orange
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or pull request events for any branch (see commented out `branches` lines for  master branch example)
   push:
+    #branches: [master]
   pull_request:
-  # External Pull Request requires confirmation BEFORE action fires https://docs.github.com/en/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks 
+    # External Pull Request requires confirmation BEFORE action fires https://docs.github.com/en/actions/managing-workflow-runs/approving-workflow-runs-from-public-forks 
+    #branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    # from https://levelup.gitconnected.com/how-to-manually-trigger-a-github-actions-workflow-4712542f1960
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)    
+        required: false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
+
+    container:
+      # Pebble SDK needs Python 2.7
+      image: python:2.7.18-buster
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # Sanity checks for debugging, if/when problems occur
+      - name: pyver
+        run: python   --version
+      - name: whichpy
+        run: which python
+      - name: whichpy2
+        run: which python2
+      - name: whichpy3
+        run: which python3
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - uses: actions/setup-python@v2
+      # from https://levelup.gitconnected.com/how-to-manually-trigger-a-github-actions-workflow-4712542f1960
+      - name: Clone Repository (Latest)
+        uses: actions/checkout@v2
+        if: github.event.inputs.git-ref == ''
+      - name: Clone Repository (Custom Ref)
+        uses: actions/checkout@v2
+        if: github.event.inputs.git-ref != ''
         with:
-          python-version: '2.7'
+          ref: ${{ github.event.inputs.git-ref }}
+      - uses: actions/setup-node@v2
+      #- name: apt-getsudo
+      #  run: apt-get update; apt-get -qq install -y sudo
+
       - name: apt-get
-        run: sudo apt-get update; sudo apt-get -qq install -y wget python-pip python2.7-dev libsdl1.2debian libfdt1 libpixman-1-0 nodejs npm libfreetype6 libx11-6 rlwrap
+        run: apt-get update; apt-get -qq install -y wget python-pip python2.7-dev libsdl1.2debian libfdt1 libpixman-1-0 nodejs npm libfreetype6 libx11-6 rlwrap
       - name: virtualenv
         run: pip install virtualenv
       - name: get sdk
@@ -46,7 +70,7 @@ jobs:
       - name: pebble-build
         run: yes | sdk/bin/pebble build
       - name: Upload PBW
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PebblePBW
           path: ./**/*.pbw

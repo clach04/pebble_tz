@@ -16,7 +16,6 @@ PBW binaries available at https://github.com/clach04/pebble_tz/releases
 <img src="assets/screenshot_7_zones.png" alt="7 Time Zone Pebble screenshot"> 
 
 
-
 With configuration and settings support via [Clay](https://github.com/clach04/pebble-clay/tree/clach04_emulator_url_index).
 
 Built with https://github.com/clach04/pebble_watchface_framework/
