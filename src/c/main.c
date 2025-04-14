@@ -95,6 +95,19 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
     bool wrote_config=false;
     int value_written=-1;
 
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() sp=%p (%ju bytes)", __func__, (void*) sp, (uintmax_t) stack_initial - sp);
+    #endif /* DEBUG_STACK */
+
+    #ifdef myDEBUG_HEAP
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %ju bytes heap used %ju bytes", __func__, (uintmax_t) heap_bytes_free(), (uintmax_t) heap_bytes_used());
+    #endif /* myDEBUG_HEAP */
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() dictionary size %d bytes", __func__, (void*) iterator->end - (void*) iterator->dictionary);
+
+
 #ifdef NO_UTC_SUPPORT
 #ifdef PBL_PLATFORM_APLITE
     // SDK2 was local time only
