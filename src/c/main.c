@@ -95,7 +95,14 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
     bool wrote_config=false;
     int value_written=-1;
 
+#ifdef NO_UTC_SUPPORT
 #ifdef PBL_PLATFORM_APLITE
+    // SDK2 was local time only
+    // With SDK3+/Firmware 3+
+    //      struct tm *current_time is local time
+    //      time_t time(NULL) is UTC time
+    // FIXME above is true for non-APLITE platforms, but not for Aplite in CloudPebble Emulator.
+    // This does NOT appear to be documented
     if(packet_contains_key(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET_MINS))
     {
         // NOTE this is ONLY needed for Aplite, later platforms must keep this as zero
@@ -103,6 +110,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found local offset: %d", settings.local_offset_in_mins);
     }
 #endif  // PBL_PLATFORM_APLITE
+#endif  // NO_UTC_SUPPORT
 
     if(packet_contains_key(iterator, MESSAGE_KEY_TZ01_NAME))
     {
@@ -268,7 +276,8 @@ void update_tz_time(struct tm *tick_time)
         time_format = "%I:%M";
     }
 
-    // With SDK3/Firmware 3
+    // SDK2 was local time only
+    // With SDK3+/Firmware 3+
     //      struct tm *current_time is local time
     //      time_t time(NULL) is UTC time
     // FIXME above is true for non-APLITE platforms, but not for Aplite in CloudPebble Emulator.
