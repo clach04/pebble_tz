@@ -6,6 +6,8 @@ PBW binaries available at https://github.com/clach04/pebble_tz/releases
 Or App Store:
 
   * https://apps.rebble.io/en_US/application/693defeac098f800098a8394?dev_settings=true
+      * https://apps.rebble.io/en_US/application/693defeac098f800098a8394?hardware=aplite&platform=all&query=&dev_settings=true&is_browser=true
+      * https://apps.rebble.io/en_US/application/693defeac098f800098a8394?hardware=chalk&platform=all&query=&dev_settings=true&is_browser=true
   * https://apps.rebble.io/en_US/application/59c57619461a8dbd6500037b?dev_settings=true
 
 ## Features
