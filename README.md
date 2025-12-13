@@ -3,6 +3,13 @@ Pebble Watchface For Multiple Timezones
 
 PBW binaries available at https://github.com/clach04/pebble_tz/releases
 
+Or App Store:
+
+  * https://apps.rebble.io/en_US/application/693defeac098f800098a8394?dev_settings=true
+  * https://apps.rebble.io/en_US/application/59c57619461a8dbd6500037b?dev_settings=true
+
+## Features
+
   * Display time, updating once per minute, using system font
   * Display Battery power
   * Display notice when Bluetooth is disconnected
@@ -14,7 +21,6 @@ PBW binaries available at https://github.com/clach04/pebble_tz/releases
       * 7 timezone names and offsets (in minutes, to support partial hour offsets, like India). No DST support.
 
 <img src="assets/screenshot_7_zones.png" alt="7 Time Zone Pebble screenshot"> 
-
 
 
 With configuration and settings support via [Clay](https://github.com/clach04/pebble-clay/tree/clach04_emulator_url_index).
