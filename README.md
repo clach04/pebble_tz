@@ -20,7 +20,9 @@ Or App Store:
       * Offline config support, no need for internet access, so timezones can be updated whilst travelling
       * 7 timezone names and offsets (in minutes, to support partial hour offsets, like India). No DST support.
 
-<img src="assets/screenshot_7_zones.png" alt="7 Time Zone Pebble screenshot"> 
+<img src="assets/screenshot_7_zones.png" alt="7 Time Zone Pebble screenshot">
+<img src="assets/7zones_names.png" alt="7 Time Zone Pebble screenshot with alt names">
+<img src="assets/5zones_chalk" alt="5 Time Zone Pebble Chalk screenshot">
 
 
 With configuration and settings support via [Clay](https://github.com/clach04/pebble-clay/tree/clach04_emulator_url_index).
