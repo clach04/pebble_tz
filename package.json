@@ -63,7 +63,9 @@
             "aplite",
             "basalt",
             "chalk",
-            "diorite"
+            "diorite",
+            "emery",
+            "gabbro"
         ],
         "uuid": "2dd4b01a-fa81-4ec2-a4a8-52e94cdeb031",
         "watchapp": {
