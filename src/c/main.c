@@ -203,15 +203,15 @@ void setup_tz_text_time(Window *window)
 
 //#define TZ_START (73 - 15)  // works for 5 time zones, there is blank space
 //#define TZ_START (73 - 20)  // pretty good
-#define TZ_START (73 - 22)
-#define TZ_SPACING 15
-#define tz01_clock_pos GRect(CLOCK_X_POS, TZ_START, 180, 180)
-#define tz02_clock_pos GRect(CLOCK_X_POS, TZ_START + TZ_SPACING, 180, 180)
-#define tz03_clock_pos GRect(CLOCK_X_POS, TZ_START + (2 * TZ_SPACING), 180, 180)
-#define tz04_clock_pos GRect(CLOCK_X_POS, TZ_START + (3 * TZ_SPACING), 180, 180)
-#define tz05_clock_pos GRect(CLOCK_X_POS, TZ_START + (4 * TZ_SPACING), 180, 180)
-#define tz06_clock_pos GRect(CLOCK_X_POS, TZ_START + (5 * TZ_SPACING), 180, 180)
-#define tz07_clock_pos GRect(CLOCK_X_POS, TZ_START + (6 * TZ_SPACING), 180, 180)
+#define TZ_START PERCENT_HEIGHT(304)
+#define TZ_SPACING 15  // FONT_KEY_GOTHIC_18_BOLD
+#define tz01_clock_pos GRect(CLOCK_X_POS, TZ_START, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
+#define tz02_clock_pos GRect(CLOCK_X_POS, TZ_START + TZ_SPACING, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
+#define tz03_clock_pos GRect(CLOCK_X_POS, TZ_START + (2 * TZ_SPACING), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
+#define tz04_clock_pos GRect(CLOCK_X_POS, TZ_START + (3 * TZ_SPACING), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
+#define tz05_clock_pos GRect(CLOCK_X_POS, TZ_START + (4 * TZ_SPACING), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
+#define tz06_clock_pos GRect(CLOCK_X_POS, TZ_START + (5 * TZ_SPACING), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
+#define tz07_clock_pos GRect(CLOCK_X_POS, TZ_START + (6 * TZ_SPACING), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
 #define TZ_FONT FONT_DATE_SYSTEM_NAME
 
 
