@@ -76,7 +76,12 @@
 #else /* PBL_RECT 144x168*/
     #define QUIET_TIME_IMAGE_GRECT GRect(0, 35+3, 17, 17)  // 17x17 image
 
-    #define CLOCK_POS GRect(0, -15, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
+    #if defined(PBL_PLATFORM_EMERY)
+        // TODO revisit, consider -9 or -8?
+        #define CLOCK_POS GRect(0, -10, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
+    #else
+        #define CLOCK_POS GRect(0, -15, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
+    #endif
     #define HEALTH_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
 
     //#define DATE_POS GRect(0, 140, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* bottom right hand side (covered by quick view) */
