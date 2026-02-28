@@ -58,4 +58,4 @@ Pebble.addEventListener('webviewclosed', function(e) {
     console.log('Failed to send config data!');
     console.log(JSON.stringify(e));
   });
-});
+

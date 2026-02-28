@@ -13,7 +13,7 @@
 #undef FONT_NAME
 #undef FONT_SYSTEM_NAME  /* the default font system will be used */
 #undef DEBUG_TIME
-//#define USE_TIME_MACHINE  // NOTE mixing with DEBUG_TIME doesn't make sense
+//#define USE_TIME_MACHINE  // NOTE mixing with DEBUG_TIME doesn't make sense. Requires update to package.json for dependencies
 
 // Show step count using builtin code
 //#define USE_HEALTH
@@ -24,6 +24,7 @@
 //#define DRAW_BATTERY
 //#define DRAW_SMALL_BATTERY
 
+#define QUIET_TIME_POS  GRect(20, 20, 60, 60)
 //#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
 //#define QUIET_TIME_IMAGE_GRECT GRect(20, 20, 20, 20)  // Example assumes a 20x20 image
 
@@ -31,6 +32,7 @@
 
 #define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
 
+// See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
     #define QUIET_TIME_IMAGE_GRECT GRect(17, 48, 17, 17)  // TODO consider placing in top of screen/circle
     #define CLOCK_POS GRect(0, 5, 180, 180) /* probably taller than really needed */
@@ -71,10 +73,18 @@
 #endif /* end of Round or rectangle */
 
 /* for screen shots and font testing
+#define DEBUG  // If set will update each second and use seconds as minutes for checking updates (not the best for screenshots)
+#ifdef DEBUG
+#define TICK_HANDLER_INTERVAL SECOND_UNIT
+#endif // DEBUG
+
 #define DEBUG_TIME
 #define DEBUG_TIME_SCREENSHOT
 // ensure quiet time and bluetooth disconnection info is shown
 #ifndef quiet_time_is_active  // so not aplite
+#define quiet_time_is_active() true  // DEBUG!
+#else
+#undef quiet_time_is_active  // See if we can force this to always be true
 #define quiet_time_is_active() true  // DEBUG!
 #endif
 #define bluetooth_connection_service_peek() false  // DEBUG!
