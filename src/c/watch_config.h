@@ -28,6 +28,9 @@
 //#define DRAW_BATTERY
 //#define DRAW_SMALL_BATTERY
 
+#define PERCENT_WIDTH(x) (PBL_DISPLAY_WIDTH * x / 1000)  // where x is a 1000th. E.g. x=18 == 1.8%, x=1000 == 100%
+#define PERCENT_HEIGHT(x) (PBL_DISPLAY_HEIGHT * x / 1000)  // where x is a 1000th. E.g. x=18 == 1.8%, x=1000 == 100%
+
 #define QUIET_TIME_POS  GRect(20, 20, 60, 60)
 //#define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
 //#define QUIET_TIME_IMAGE_GRECT GRect(20, 20, 20, 20)  // Example assumes a 20x20 image
@@ -39,39 +42,39 @@
 // See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
     #define QUIET_TIME_IMAGE_GRECT GRect(17, 48, 17, 17)  // TODO consider placing in top of screen/circle
-    #define CLOCK_POS GRect(0, 5, 180, 180) /* probably taller than really needed */
-    #define HEALTH_POS GRect(0, 40, 180, 180)
+    #define CLOCK_POS GRect(0, 5, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
+    #define HEALTH_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
     //#define BT_POS GRect(0, 100, 180, 180) /* probably taller than really needed */
     #define BT_DISCONNECT_IMAGE_GRECT GRect(148, 47, 18, 22)  // TODO consider placing in top of screen/circle
 
     #define DATE_ALIGN GTextAlignmentCenter
-    #define DATE_POS GRect(0, 0, 180, 180) /* probably taller than really needed */
+    #define DATE_POS GRect(0, 0, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
 
     #define BAT_ALIGN GTextAlignmentCenter
     #ifdef DRAW_BATTERY
-        #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
+        #define BAT_POS GRect(85, 10, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
     #else
-        #define BAT_POS GRect(0, 155, 180, 180) /* probably taller than really needed */
+        #define BAT_POS GRect(0, PERCENT_HEIGHT(862), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
     #endif /* DRAW_BATTERY */
 
 #else /* PBL_RECT 144x168*/
     #define QUIET_TIME_IMAGE_GRECT GRect(0, 35+3, 17, 17)  // 17x17 image
 
-    #define CLOCK_POS GRect(0, -15, 144, 168) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
-    #define HEALTH_POS GRect(0, 40, 144, 168)
+    #define CLOCK_POS GRect(0, -15, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
+    #define HEALTH_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
 
-    //#define DATE_POS GRect(0, 140, 144, 168) /* bottom right hand side (covered by quick view) */
+    //#define DATE_POS GRect(0, 140, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* bottom right hand side (covered by quick view) */
     #define DATE_ALIGN GTextAlignmentRight  // TODO make left then math will be easier below!
     #define DATE_POS GRect(26, 35, 100, 30) /* try for near top/center, want almost centered */
-    //#define DATE_POS GRect(0, 40, 144, 168) /* try for near top/center, want centered */
+    //#define DATE_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* try for near top/center, want centered */
 
-    //#define BT_POS GRect(0, 120, 144, 168) /* probably taller than really needed */
+    //#define BT_POS GRect(0, 120, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
     #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20 + 3, 35, 18, 22)
     #ifdef DRAW_BATTERY
-        #define BAT_POS GRect(5, 150, 144, 168)
+        #define BAT_POS GRect(5, 150, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
     #else
         #define BAT_ALIGN GTextAlignmentLeft
-        //#define BAT_POS GRect(0, 140, 144, 168) /* bottom left hand side (covered by quick view) */
+        //#define BAT_POS GRect(0, 140, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* bottom left hand side (covered by quick view) */
         #define BAT_POS GRect(14, 35, 50, 30) /* 14 is quiet time icon size */
     #endif /* DRAW_BATTERY */
 #endif /* end of Round or rectangle */

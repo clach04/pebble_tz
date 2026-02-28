@@ -1,7 +1,7 @@
 {
     "author": "clach04",
     "dependencies": {
-        "pebble-clay": "^1.0.1",
+        "@rebble/clay": "^1.0.1",
         "pebble-packet": "^1.3.2"
     },
     "keywords": [],
