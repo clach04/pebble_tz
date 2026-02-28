@@ -45,13 +45,13 @@
     #define BT_DISCONNECT_IMAGE_GRECT GRect(148, 47, 18, 22)  // TODO consider placing in top of screen/circle
 
     #define DATE_ALIGN GTextAlignmentCenter
-    #define DATE_POS GRect(0, 135, 180, 180) /* probably taller than really needed */
+    #define DATE_POS GRect(0, 0, 180, 180) /* probably taller than really needed */
 
     #define BAT_ALIGN GTextAlignmentCenter
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(85, 10, 180, 180) /* probably taller than really needed */
     #else
-        #define BAT_POS GRect(0, 150, 180, 180) /* probably taller than really needed */
+        #define BAT_POS GRect(0, 155, 180, 180) /* probably taller than really needed */
     #endif /* DRAW_BATTERY */
 
 #else /* PBL_RECT 144x168*/
