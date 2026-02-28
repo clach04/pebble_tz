@@ -155,7 +155,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         {\
             settings.TZ_MACRO ## _offset = packet_get_integer(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET);\
             APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " offset: %d", settings.TZ_MACRO ## _offset);\
-        } 
+        }
 
     TZ_DO_SETTINGS(tz02, TZ02)
     TZ_DO_SETTINGS(tz03, TZ03)
@@ -195,8 +195,10 @@ void setup_tz_text_time(Window *window)
 {
 #ifdef PBL_ROUND /* 180x180 */
     #define CLOCK_X_POS 14
+    #define TZ_TIME_ALIGN GTextAlignmentCenter
 #else // rect
     #define CLOCK_X_POS 2
+    #define TZ_TIME_ALIGN GTextAlignmentLeft
 #endif // rect
 
 //#define TZ_START (73 - 15)  // works for 5 time zones, there is blank space
@@ -211,8 +213,7 @@ void setup_tz_text_time(Window *window)
 #define tz06_clock_pos GRect(CLOCK_X_POS, TZ_START + (5 * TZ_SPACING), 180, 180)
 #define tz07_clock_pos GRect(CLOCK_X_POS, TZ_START + (6 * TZ_SPACING), 180, 180)
 #define TZ_FONT FONT_DATE_SYSTEM_NAME
-    
-#define TZ_TIME_ALIGN GTextAlignmentLeft
+
 
     setup_text_time(window);
 
@@ -315,7 +316,7 @@ void update_tz_time(struct tm *tick_time)
         utc_tm = gmtime(&utc_time);\
         strftime(buffer, sizeof(buffer), time_format, utc_tm);\
         snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name);\
-        text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str); 
+        text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str);
 
 TZ_DO_TIME(tz02)
 TZ_DO_TIME(tz03)
