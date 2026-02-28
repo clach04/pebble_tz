@@ -31,7 +31,9 @@ With configuration and settings support via [Clay](https://github.com/clach04/pe
 
 Built with https://github.com/clach04/pebble_watchface_framework/
 
-Import into CloudPebble by clicking https://cloudpebble.net/ide/import/github/clach04/pebble_tz/
+Import into CloudPebble by clicking
+  * https://cloudpebble.repebble.com/ide/import/github/clach04/pebble_tz/
+  * https://cloudpebble.repebble.com/ide/import/github/clach04/pebble_tz/clay_choice
 
 Using local Pebble SDK also requires node (due to Clay), under Ubuntu:
 
