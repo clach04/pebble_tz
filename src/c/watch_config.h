@@ -48,6 +48,13 @@
     #define FONT_DATE_SYSTEM_NAME FONT_KEY_GOTHIC_18_BOLD
 #endif
 
+
+#if defined(PBL_PLATFORM_EMERY) || defined(PBL_PLATFORM_GABBRO)
+    #define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_24
+#else  // Original
+    #define FONT_BAT_SYSTEM_NAME FONT_KEY_GOTHIC_18
+#endif
+
 // See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
     #define QUIET_TIME_IMAGE_GRECT GRect(17, 48, 17, 17)  // TODO consider placing in top of screen/circle
