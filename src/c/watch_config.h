@@ -39,6 +39,15 @@
 
 #define QUIET_TIME_IMAGE RESOURCE_ID_IMAGE_QUIET_TIME
 
+
+#if PBL_DISPLAY_HEIGHT == 228  // 200x228 Pebble Time 2 (emery)
+    #define FONT_DATE_SYSTEM_NAME FONT_KEY_GOTHIC_24_BOLD
+#elif PBL_DISPLAY_HEIGHT == 260  // 260x260 Pebble Round 2 (gabbro)
+    #define FONT_DATE_SYSTEM_NAME FONT_KEY_GOTHIC_24_BOLD  // same as emery
+#else  // if 168
+    #define FONT_DATE_SYSTEM_NAME FONT_KEY_GOTHIC_18_BOLD
+#endif
+
 // See https://developer.rebble.io/guides/best-practices/building-for-every-pebble/#available-defines-and-macros for hardware specific defines
 #ifdef PBL_ROUND /* 180x180 */
     #define QUIET_TIME_IMAGE_GRECT GRect(17, 48, 17, 17)  // TODO consider placing in top of screen/circle

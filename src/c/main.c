@@ -204,7 +204,15 @@ void setup_tz_text_time(Window *window)
 //#define TZ_START (73 - 15)  // works for 5 time zones, there is blank space
 //#define TZ_START (73 - 20)  // pretty good
 #define TZ_START PERCENT_HEIGHT(304)
-#define TZ_SPACING 15  // FONT_KEY_GOTHIC_18_BOLD
+
+#if PBL_DISPLAY_HEIGHT == 168  // Original
+    #define TZ_SPACING 15  // FONT_KEY_GOTHIC_18_BOLD
+#elif PBL_DISPLAY_HEIGHT == 180  // Original Round Chalk
+    #define TZ_SPACING 15  // FONT_KEY_GOTHIC_18_BOLD
+#else
+    #define TZ_SPACING 20  // FONT_KEY_GOTHIC_24_BOLD
+#endif
+
 #define tz01_clock_pos GRect(CLOCK_X_POS, TZ_START, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
 #define tz02_clock_pos GRect(CLOCK_X_POS, TZ_START + TZ_SPACING, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
 #define tz03_clock_pos GRect(CLOCK_X_POS, TZ_START + (2 * TZ_SPACING), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
