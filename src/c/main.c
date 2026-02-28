@@ -18,26 +18,26 @@ extern void cleanup_text_time();
 extern void setup_text_time(Window *window);
 //FIXME
 
-#define INIT_TZ01_NAME "GMT+01"  // summer time for UK or Winter for Western Europe
-#define INIT_TZ01_OFFSET (+1 * 60)  // these are minutes offsets, NOT hours (rather than names) and thus not DST aware
+#define INIT_TZ01_NAME "GMT+08"  // HKT - no DST for Hong Kong
+#define INIT_TZ01_OFFSET (+8 * 60)
 
-#define INIT_TZ02_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
-#define INIT_TZ02_OFFSET (0 * 60)  //  zero
+#define INIT_TZ02_NAME "GMT+05:30"  // India, has a half hour tz and not DST aware
+#define INIT_TZ02_OFFSET (+330)
 
-#define INIT_TZ03_NAME "GMT-08"  // PST. PDT is GMT-07 and typically starts March, ends November
-#define INIT_TZ03_OFFSET (-8 * 60)
+#define INIT_TZ03_NAME "GMT+01"  // Winter for Western Europe (summer time for UK)
+#define INIT_TZ03_OFFSET (+1 * 60)  // these are minutes offsets, NOT hours (rather than names) and thus not DST aware
 
-#define INIT_TZ04_NAME "GMT+05:30"  // India, has a half hour tz and not DST aware
-#define INIT_TZ04_OFFSET (+330)
+#define INIT_TZ04_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
+#define INIT_TZ04_OFFSET (0 * 60)  //  zero
 
-#define INIT_TZ05_NAME "GMT+08"  // HKT - no DST for Hong Kong
-#define INIT_TZ05_OFFSET (+8 * 60)
+#define INIT_TZ05_NAME "GMT-05"  // Winter for New York
+#define INIT_TZ05_OFFSET (-5 * 60)
 
-#define INIT_TZ06_NAME "GMT-05"  // New York in summer
-#define INIT_TZ06_OFFSET (-5 * 60)
+#define INIT_TZ06_NAME "GMT-06"  // Winter for Austin, TX (GMT-6)
+#define INIT_TZ06_OFFSET (-6 * 60)
 
-#define INIT_TZ07_NAME "GMT-06"  // Austin, TX (GMT-6)
-#define INIT_TZ07_OFFSET (-6 * 60)
+#define INIT_TZ07_NAME "GMT-08"  // Winter for Los Angeles - PST. PDT is GMT-07 and typically starts March, ends November
+#define INIT_TZ07_OFFSET (-8 * 60)
 
 
 //#define MAX_TZ_NAME_LEN 6 // Long enough for "GMT-xx"
@@ -95,7 +95,27 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
     bool wrote_config=false;
     int value_written=-1;
 
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() entry", __func__);
+    #ifdef DEBUG_STACK
+        register uint32_t sp __asm__("sp");
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() sp=%p (%ju bytes)", __func__, (void*) sp, (uintmax_t) stack_initial - sp);
+    #endif /* DEBUG_STACK */
+
+    #ifdef myDEBUG_HEAP
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() heap free %ju bytes heap used %ju bytes", __func__, (uintmax_t) heap_bytes_free(), (uintmax_t) heap_bytes_used());
+    #endif /* myDEBUG_HEAP */
+
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "%s() dictionary size %d bytes", __func__, (void*) iterator->end - (void*) iterator->dictionary);
+
+
+#ifdef NO_UTC_SUPPORT
 #ifdef PBL_PLATFORM_APLITE
+    // SDK2 was local time only
+    // With SDK3+/Firmware 3+
+    //      struct tm *current_time is local time
+    //      time_t time(NULL) is UTC time
+    // FIXME above is true for non-APLITE platforms, but not for Aplite in CloudPebble Emulator.
+    // This does NOT appear to be documented
     if(packet_contains_key(iterator, MESSAGE_KEY_LOCAL_UTC_OFFSET_MINS))
     {
         // NOTE this is ONLY needed for Aplite, later platforms must keep this as zero
@@ -103,6 +123,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found local offset: %d", settings.local_offset_in_mins);
     }
 #endif  // PBL_PLATFORM_APLITE
+#endif  // NO_UTC_SUPPORT
 
     if(packet_contains_key(iterator, MESSAGE_KEY_TZ01_NAME))
     {
@@ -268,7 +289,8 @@ void update_tz_time(struct tm *tick_time)
         time_format = "%I:%M";
     }
 
-    // With SDK3/Firmware 3
+    // SDK2 was local time only
+    // With SDK3+/Firmware 3+
     //      struct tm *current_time is local time
     //      time_t time(NULL) is UTC time
     // FIXME above is true for non-APLITE platforms, but not for Aplite in CloudPebble Emulator.

@@ -18,10 +18,12 @@
     **  [INFO] message_inbox.c:13: app_message_open() called with app_message_inbox_size_maximum().
     **  [INFO] message_inbox.c:16: This consumes 8200 bytes of heap memory, potentially more in the future!    
     */
-    #define MAX_MESSAGE_SIZES
-    #define MAX_MESSAGE_SIZE_IN 200
-    #define MAX_MESSAGE_SIZE_OUT 0
-#endif
+    #ifndef MAX_MESSAGE_SIZES
+        #define MAX_MESSAGE_SIZES
+        #define MAX_MESSAGE_SIZE_IN 200
+        #define MAX_MESSAGE_SIZE_OUT 0
+    #endif // ifndef MAX_MESSAGE_SIZES
+#endif  // ifndef USE_MAX_MESSAGE_SIZE
 
 #ifndef BLUETOOTH_DISCONNECTED_STR
 #define BLUETOOTH_DISCONNECTED_STR "BT Disconnected"

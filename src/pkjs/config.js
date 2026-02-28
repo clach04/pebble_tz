@@ -1,12 +1,12 @@
 var meta = require('../../package.json');
 
 module.exports = [
-    { 
-        "type": "heading", 
+    {
+        "type": "heading",
         "defaultValue": "Preferences" ,
         "size": 3
-    }, 
-    { 
+    },
+    {
         "type": "section",
         "items": [
             {
@@ -32,7 +32,7 @@ module.exports = [
             }
         ]
     },
-    { 
+    {
         "type": "section",
         "items": [
             {

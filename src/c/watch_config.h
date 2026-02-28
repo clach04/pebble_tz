@@ -1,6 +1,10 @@
 #pragma once
 
-#define USE_MAX_MESSAGE_SIZE  // for nowuse this, without 6 timezones is bigger than 200, TODO set max_in only
+// FIXME below is fine on Basalt+, USE_MAX_MESSAGE_SIZE is too big for aplite - not enough heap memory :-(
+//#define USE_MAX_MESSAGE_SIZE  // for nowuse this, without 6 timezones is bigger than 200, TODO set max_in only
+#define MAX_MESSAGE_SIZES
+#define MAX_MESSAGE_SIZE_IN 2000  // actually need under 1.5K, extra for just-in-case
+#define MAX_MESSAGE_SIZE_OUT 0
 
 //#define USE_GENERIC_MAIN
 
