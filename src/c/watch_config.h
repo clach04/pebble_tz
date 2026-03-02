@@ -79,15 +79,19 @@
     #if defined(PBL_PLATFORM_EMERY)
         // TODO revisit, consider -9 or -8?
         #define CLOCK_POS GRect(0, -10, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
+
+        #define DATE_ALIGN GTextAlignmentLeft
+        #define DATE_POS GRect(45 + 10, 35, 100, 30) // to the right of watch battery
     #else
         #define CLOCK_POS GRect(0, -15, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
+
+        #define DATE_ALIGN GTextAlignmentRight  // TODO make left then math will be easier below!
+        //#define DATE_POS GRect(0, 140, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* bottom right hand side (covered by quick view) */
+        #define DATE_POS GRect(26, 35, 100, 30) /* try for near top/center, want almost centered */
+        //#define DATE_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* try for near top/center, want centered */
     #endif
     #define HEALTH_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
 
-    //#define DATE_POS GRect(0, 140, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* bottom right hand side (covered by quick view) */
-    #define DATE_ALIGN GTextAlignmentRight  // TODO make left then math will be easier below!
-    #define DATE_POS GRect(26, 35, 100, 30) /* try for near top/center, want almost centered */
-    //#define DATE_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* try for near top/center, want centered */
 
     //#define BT_POS GRect(0, 120, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
     #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20 + 3, 35, 18, 22)
