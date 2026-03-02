@@ -73,28 +73,34 @@
         #define BAT_POS GRect(0, PERCENT_HEIGHT(862), PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
     #endif /* DRAW_BATTERY */
 
-#else /* PBL_RECT 144x168*/
-    #define QUIET_TIME_IMAGE_GRECT GRect(0, 35+3, 17, 17)  // 17x17 image
+#else /* PBL_RECT */
 
-    #if defined(PBL_PLATFORM_EMERY)
+    #if defined(PBL_PLATFORM_EMERY)  // 200x228 Pebble Time 2 (emery)
+        #define QUIET_TIME_IMAGE_GRECT GRect(0, 35+9, 17, 17)  // 17x17 image
+
         // TODO revisit, consider -9 or -8?
         #define CLOCK_POS GRect(0, -10, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
 
         #define DATE_ALIGN GTextAlignmentLeft
         #define DATE_POS GRect(45 + 10, 35, 100, 30) // to the right of watch battery
-    #else
+
+        #define BT_DISCONNECT_IMAGE_GRECT GRect(PBL_DISPLAY_WIDTH - 20 + 3, PERCENT_HEIGHT(185), 18, 22)  // BT_IMAGE_POS
+    #else  // 144x168 OG Pebble, Time (aplite, basalt)
+        #define QUIET_TIME_IMAGE_GRECT GRect(0, 35+3, 17, 17)  // 17x17 image TODO down a pixel or so?
+
         #define CLOCK_POS GRect(0, -15, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* TOP of screen, completely avoids preview popoup obscuring time. probably taller than really needed */
 
         #define DATE_ALIGN GTextAlignmentRight  // TODO make left then math will be easier below!
         //#define DATE_POS GRect(0, 140, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* bottom right hand side (covered by quick view) */
         #define DATE_POS GRect(26, 35, 100, 30) /* try for near top/center, want almost centered */
         //#define DATE_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* try for near top/center, want centered */
+
+        #define BT_DISCONNECT_IMAGE_GRECT GRect(PBL_DISPLAY_WIDTH - 20 + 3, PERCENT_HEIGHT(210), 18, 22)  // BT_IMAGE_POS
     #endif
     #define HEALTH_POS GRect(0, 40, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
 
 
     //#define BT_POS GRect(0, 120, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
-    #define BT_DISCONNECT_IMAGE_GRECT GRect(PBL_DISPLAY_WIDTH - 20 + 3, PERCENT_HEIGHT(210), 18, 22)  // BT_IMAGE_POS
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
     #else
