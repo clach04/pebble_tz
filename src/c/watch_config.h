@@ -94,7 +94,7 @@
 
 
     //#define BT_POS GRect(0, 120, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT) /* probably taller than really needed */
-    #define BT_DISCONNECT_IMAGE_GRECT GRect(144 - 20 + 3, 35, 18, 22)
+    #define BT_DISCONNECT_IMAGE_GRECT GRect(PBL_DISPLAY_WIDTH - 20 + 3, 35, 18, 22)  // BT_IMAGE_POS
     #ifdef DRAW_BATTERY
         #define BAT_POS GRect(5, 150, PBL_DISPLAY_WIDTH, PBL_DISPLAY_HEIGHT)
     #else
