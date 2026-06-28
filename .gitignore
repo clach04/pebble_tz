@@ -34,3 +34,5 @@
 # npm dependencies
 node_modules/
 
+*.bak
+*~
