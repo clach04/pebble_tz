@@ -19,25 +19,25 @@ extern void cleanup_text_time();
 extern void setup_text_time(Window *window);
 //FIXME
 
-#define INIT_TZ01_NAME "GMT+08"  // HKT - no DST for Hong Kong
+#define INIT_TZ01_NAME "China"  // HKT - no DST for Hong Kong
 #define INIT_TZ01_TZ_RULE "CST-8"
 
-#define INIT_TZ02_NAME "GMT+05:30"  // India, has a half hour tz and not DST aware
+#define INIT_TZ02_NAME "India"  // India, has a half hour tz and not DST aware
 #define INIT_TZ02_TZ_RULE "IST-5:30"
 
-#define INIT_TZ03_NAME "GMT+01"  // Winter for Western Europe (summer time for UK)
+#define INIT_TZ03_NAME "Germany"  // Winter for Western Europe (summer time for UK)
 #define INIT_TZ03_TZ_RULE "CET-1CEST,M3.5.0,M10.5.0/3"  // these are minutes offsets, NOT hours (rather than names) and thus not DST aware
 
-#define INIT_TZ04_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
+#define INIT_TZ04_NAME "London, UK"  // Winter time for UK or CET for Western Europe
 #define INIT_TZ04_TZ_RULE "GMT0BST,M3.5.0/1,M10.5.0"  //  zero
 
-#define INIT_TZ05_NAME "GMT-05"  // Winter for New York
+#define INIT_TZ05_NAME "New York"  // Winter for New York
 #define INIT_TZ05_TZ_RULE "EST5EDT,M3.2.0,M11.1.0"
 
-#define INIT_TZ06_NAME "GMT-06"  // Winter for Austin, TX (GMT-6)
+#define INIT_TZ06_NAME "Austin, TX"  // Winter for Austin, TX (GMT-6)
 #define INIT_TZ06_TZ_RULE "CST6CDT,M3.2.0,M11.1.0"
 
-#define INIT_TZ07_NAME "GMT-08"  // Winter for Los Angeles - PST. PDT is GMT-07 and typically starts March, ends November
+#define INIT_TZ07_NAME "CA, USA"  // Los Angeles - PST. PDT is GMT-07 and typically starts March, ends November
 #define INIT_TZ07_TZ_RULE "PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00"
 
 
@@ -64,7 +64,7 @@ typedef struct persist {
 } __attribute__((__packed__)) persist;
 
 persist settings = {
-    .local_tz_in_mins = 0,  // This will be calculated and sent from javascript on phone // TODO ifdef
+    .local_offset_in_mins = 0,  // This will be calculated and sent from javascript on phone // TODO ifdef
     .tz01_name = INIT_TZ01_NAME,
     .tz01_tz = INIT_TZ01_TZ_RULE,
     .tz02_name = INIT_TZ02_NAME,
@@ -76,9 +76,9 @@ persist settings = {
     .tz05_name = INIT_TZ05_NAME,
     .tz05_tz = INIT_TZ05_TZ_RULE,
     .tz06_name = INIT_TZ06_NAME,
-    .tz06_tz = INIT_TZ06__TZ_RULE,
+    .tz06_tz = INIT_TZ06_TZ_RULE,
     .tz07_name = INIT_TZ07_NAME,
-    .tz07_tz = INIT_TZ07__TZ_RULE,
+    .tz07_tz = INIT_TZ07_TZ_RULE,
 };
 
 TextLayer *tz01_time_layer=NULL;
@@ -88,6 +88,15 @@ TextLayer *tz04_time_layer=NULL;
 TextLayer *tz05_time_layer=NULL;
 TextLayer *tz06_time_layer=NULL;
 TextLayer *tz07_time_layer=NULL;
+
+// DEBUG
+microtz_info tz01_tz_parsed;// = microtz_parse("PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00");  // DEBUG newer pebble compiler errors out when using literal here; error: initializer element is not constant
+microtz_info tz02_tz_parsed;
+microtz_info tz03_tz_parsed;
+microtz_info tz04_tz_parsed;
+microtz_info tz05_tz_parsed;
+microtz_info tz06_tz_parsed;
+microtz_info tz07_tz_parsed;
 
 void update_tz_time(struct tm *tick_time);
 
@@ -141,7 +150,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
     {
         if(!strcmp(settings.tz01_tz, ""))
         {
-            strcpy(settings.tz01_tz, INIT_TZ01_RULE);
+            strcpy(settings.tz01_tz, INIT_TZ01_TZ_RULE);
         }
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz1 TZ: %s", settings.tz01_tz);
     }
@@ -160,7 +169,7 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         {\
             if(!strcmp(settings.TZ_MACRO ## _tz, ""))\
             {\
-                strcpy(settings.TZ_MACRO ## _tz, INIT_TZ01_RULE);\
+                strcpy(settings.TZ_MACRO ## _tz, INIT_## MSG_TZ_MACRO ##_TZ_RULE);\
             }\
             APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " TZ: %s", settings.TZ_MACRO ## _tz);\
         }
@@ -295,6 +304,8 @@ void update_tz_time(struct tm *tick_time)
     static char tz07_time_str[MAX_TZ_NAME_LEN+1 + sizeof("00:00")] = "GMT-00 00:00";  // need one string per layer, reusing same buffer results in same text
     char *time_format=NULL;
     time_t utc_time=time(NULL);
+    time_t converted_local_tm=time(NULL);
+    int local_offset_mins=0;
     struct tm *utc_tm=NULL;
 
     if (clock_is_24h_style())
@@ -314,23 +325,20 @@ void update_tz_time(struct tm *tick_time)
     // This does NOT appear to be documented
 
     utc_time=time(NULL);
-    // FIXME microtz function calls here
-    // Not supposed to peak at a time_t but know it is number of seconds since epoc.
-    // So perform arithmetic on second s
-    utc_time += (60 * settings.tz01_offset) + (60 * settings.local_offset_in_mins);
-    utc_tm = gmtime(&utc_time);
+    local_offset_mins = microtz_offset(&tz01_tz_parsed, utc_time);
+    converted_local_tm = utc_time + (60 * local_offset_mins);
+    utc_tm = gmtime(&converted_local_tm);
     strftime(buffer, sizeof(buffer), time_format, utc_tm);
     snprintf(tz01_time_str, sizeof(tz01_time_str), "%s %s", buffer, settings.tz01_name);
 
     text_layer_set_text(tz01_time_layer, tz01_time_str);
 
-
     // Not supposed to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
 #define TZ_DO_TIME(TZ_MACRO)\
-        utc_time = time(NULL);\
-        utc_time += (60 * settings.TZ_MACRO ## _offset) + (60 * settings.local_offset_in_mins);\
-        utc_tm = gmtime(&utc_time);\
+        local_offset_mins = microtz_offset(&TZ_MACRO ##_tz_parsed, utc_time);\
+        converted_local_tm = utc_time + (60 * local_offset_mins);\
+        utc_tm = gmtime(&converted_local_tm);\
         strftime(buffer, sizeof(buffer), time_format, utc_tm);\
         snprintf(TZ_MACRO ## _time_str, sizeof(TZ_MACRO ## _time_str), "%s %s", buffer, settings.TZ_MACRO ## _name);\
         text_layer_set_text(TZ_MACRO ## _time_layer, TZ_MACRO ## _time_str);
@@ -341,7 +349,6 @@ TZ_DO_TIME(tz04)
 TZ_DO_TIME(tz05)
 TZ_DO_TIME(tz06)
 TZ_DO_TIME(tz07)
-
     // mark dirty?
 }
 void tz_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -363,6 +370,13 @@ void tz_init()
         APP_LOG(APP_LOG_LEVEL_DEBUG, "tz settings NOTE loaded");
     }
     // FIXME TZ rule parsing and processing
+    tz01_tz_parsed = microtz_parse(settings.tz01_tz);
+    tz02_tz_parsed = microtz_parse(settings.tz02_tz);  // FIXME macro this
+    tz03_tz_parsed = microtz_parse(settings.tz03_tz);  // FIXME macro this
+    tz04_tz_parsed = microtz_parse(settings.tz04_tz);  // FIXME macro this
+    tz05_tz_parsed = microtz_parse(settings.tz05_tz);  // FIXME macro this
+    tz06_tz_parsed = microtz_parse(settings.tz06_tz);  // FIXME macro this
+    tz07_tz_parsed = microtz_parse(settings.tz07_tz);  // FIXME macro this
 }
 void tz_deinit()
 {

@@ -1,5 +1,9 @@
 #include <string.h>
 
+#ifdef PBL_DISPLAY_WIDTH  // Horrible if Pebble SDK check
+#include <pebble.h> // <time.h>
+#endif // PBL_DISPLAY_WIDTH  // Horrible if Pebble SDK check
+
 #include "microtz.h"
 
 static int parse_num(const char **p) {
@@ -82,7 +86,8 @@ time_t mktime_utc(int year, int month, int day, int hour, int min, int sec) {
 #ifdef _WIN32
     return _mkgmtime(&t);
 #else
-    return timegm(&t);  // NOTE currently untested, only tested gcc under Windows so far
+    //return timegm(&t);  // NOTE currently untested, only tested gcc under Windows so far
+    return mktime(&t);  // https://developer.rebble.io/docs/c/Standard_C/Time/#mktime
 #endif
 }
 
