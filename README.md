@@ -33,7 +33,8 @@ Built with https://github.com/clach04/pebble_watchface_framework/
 
 Import into CloudPebble by clicking
   * https://cloudpebble.repebble.com/ide/import/github/clach04/pebble_tz/
-  * https://cloudpebble.repebble.com/ide/import/github/clach04/pebble_tz/clay_choice
+  * https://cloudpebble.repebble.com/ide/import/github/clach04/pebble_tz/posix_tz
+  * https://cloudpebble.repebble.com/ide/import/github/clach04/pebble_tz/clay_choice -- older, no DST support
 
 Using local Pebble SDK also requires node (due to Clay), under Ubuntu:
 
