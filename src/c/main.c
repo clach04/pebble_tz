@@ -12,6 +12,7 @@
 
 #include <pebble-packet/pebble-packet.h>
 
+#include "microtz.h"
 
 //FIXME watchface.c
 extern void cleanup_text_time();
@@ -19,64 +20,65 @@ extern void setup_text_time(Window *window);
 //FIXME
 
 #define INIT_TZ01_NAME "GMT+08"  // HKT - no DST for Hong Kong
-#define INIT_TZ01_OFFSET (+8 * 60)
+#define INIT_TZ01_TZ_RULE "CST-8"
 
 #define INIT_TZ02_NAME "GMT+05:30"  // India, has a half hour tz and not DST aware
-#define INIT_TZ02_OFFSET (+330)
+#define INIT_TZ02_TZ_RULE "IST-5:30"
 
 #define INIT_TZ03_NAME "GMT+01"  // Winter for Western Europe (summer time for UK)
-#define INIT_TZ03_OFFSET (+1 * 60)  // these are minutes offsets, NOT hours (rather than names) and thus not DST aware
+#define INIT_TZ03_TZ_RULE "CET-1CEST,M3.5.0,M10.5.0/3"  // these are minutes offsets, NOT hours (rather than names) and thus not DST aware
 
 #define INIT_TZ04_NAME "GMT+00"  // Winter time for UK or CET for Western Europe
-#define INIT_TZ04_OFFSET (0 * 60)  //  zero
+#define INIT_TZ04_TZ_RULE "GMT0BST,M3.5.0/1,M10.5.0"  //  zero
 
 #define INIT_TZ05_NAME "GMT-05"  // Winter for New York
-#define INIT_TZ05_OFFSET (-5 * 60)
+#define INIT_TZ05_TZ_RULE "EST5EDT,M3.2.0,M11.1.0"
 
 #define INIT_TZ06_NAME "GMT-06"  // Winter for Austin, TX (GMT-6)
-#define INIT_TZ06_OFFSET (-6 * 60)
+#define INIT_TZ06_TZ_RULE "CST6CDT,M3.2.0,M11.1.0"
 
 #define INIT_TZ07_NAME "GMT-08"  // Winter for Los Angeles - PST. PDT is GMT-07 and typically starts March, ends November
-#define INIT_TZ07_OFFSET (-8 * 60)
+#define INIT_TZ07_TZ_RULE "PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00"
 
 
 //#define MAX_TZ_NAME_LEN 6 // Long enough for "GMT-xx"
 #define MAX_TZ_NAME_LEN 12  // Long enough for "timezonename"
+#define MAX_TZ_RULE_LEN 38  // Long enough for "LA"
 typedef struct persist {
-    char tz01_name[MAX_TZ_NAME_LEN+1];
-    int tz01_offset;  // Number of mins
-    char tz02_name[MAX_TZ_NAME_LEN+1];
-    int tz02_offset;
-    char tz03_name[MAX_TZ_NAME_LEN+1];
-    int tz03_offset;
-    char tz04_name[MAX_TZ_NAME_LEN+1];
-    int tz04_offset;
-    char tz05_name[MAX_TZ_NAME_LEN+1];
-    int tz05_offset;
     // Aplite times are all base on local time so need to know local offset, for later platforms this is always zero
     int local_offset_in_mins;  // zero for non-Aplite devices  // todo ifdef?
+    char tz01_name[MAX_TZ_NAME_LEN+1];
+    char tz01_tz[MAX_TZ_RULE_LEN+1];
+    char tz02_name[MAX_TZ_NAME_LEN+1];
+    char tz02_tz[MAX_TZ_RULE_LEN+1];
+    char tz03_name[MAX_TZ_NAME_LEN+1];
+    char tz03_tz[MAX_TZ_RULE_LEN+1];
+    char tz04_name[MAX_TZ_NAME_LEN+1];
+    char tz04_tz[MAX_TZ_RULE_LEN+1];
+    char tz05_name[MAX_TZ_NAME_LEN+1];
+    char tz05_tz[MAX_TZ_RULE_LEN+1];
     char tz06_name[MAX_TZ_NAME_LEN+1];
-    int tz06_offset;
+    char tz06_tz[MAX_TZ_RULE_LEN+1];
     char tz07_name[MAX_TZ_NAME_LEN+1];
-    int tz07_offset;
+    char tz07_tz[MAX_TZ_RULE_LEN+1];
 } __attribute__((__packed__)) persist;
 
 persist settings = {
+    .local_tz_in_mins = 0,  // This will be calculated and sent from javascript on phone // TODO ifdef
     .tz01_name = INIT_TZ01_NAME,
-    .tz01_offset = INIT_TZ01_OFFSET,
+    .tz01_tz = INIT_TZ01_TZ_RULE,
     .tz02_name = INIT_TZ02_NAME,
-    .tz02_offset = INIT_TZ02_OFFSET,
+    .tz02_tz = INIT_TZ02_TZ_RULE,
     .tz03_name = INIT_TZ03_NAME,
-    .tz03_offset = INIT_TZ03_OFFSET,
+    .tz03_tz = INIT_TZ03_TZ_RULE,
     .tz04_name = INIT_TZ04_NAME,
-    .tz04_offset = INIT_TZ04_OFFSET,
+    .tz04_tz = INIT_TZ04_TZ_RULE,
     .tz05_name = INIT_TZ05_NAME,
-    .tz05_offset = INIT_TZ05_OFFSET,
-    .local_offset_in_mins = 0,  // This will be calculated and sent from javascript on phone // TODO ifdef
+    .tz05_tz = INIT_TZ05_TZ_RULE,
     .tz06_name = INIT_TZ06_NAME,
-    .tz06_offset = INIT_TZ06_OFFSET,
+    .tz06_tz = INIT_TZ06__TZ_RULE,
     .tz07_name = INIT_TZ07_NAME,
-    .tz07_offset = INIT_TZ07_OFFSET,
+    .tz07_tz = INIT_TZ07__TZ_RULE,
 };
 
 TextLayer *tz01_time_layer=NULL;
@@ -135,10 +137,13 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz1 name: %s", settings.tz01_name);
     }
 
-    if(packet_contains_key(iterator, MESSAGE_KEY_TZ01_UTC_OFFSET))
+    if(packet_contains_key(iterator, MESSAGE_KEY_TZ01_TZ_RULE))
     {
-        settings.tz01_offset = packet_get_integer(iterator, MESSAGE_KEY_TZ01_UTC_OFFSET);
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz1 offset: %d", settings.tz01_offset);
+        if(!strcmp(settings.tz01_tz, ""))
+        {
+            strcpy(settings.tz01_tz, INIT_TZ01_RULE);
+        }
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found tz1 TZ: %s", settings.tz01_tz);
     }
 
 #define TZ_DO_SETTINGS(TZ_MACRO, MSG_TZ_MACRO)\
@@ -151,10 +156,13 @@ bool CUSTOM_IN_RECV_HANDLER(DictionaryIterator *iterator, void *context)
                 }\
             APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " name: %s", settings.TZ_MACRO ## _name);\
         }\
-        if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET)) \
+        if(packet_contains_key(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_TZ_RULE))\
         {\
-            settings.TZ_MACRO ## _offset = packet_get_integer(iterator, MESSAGE_KEY_ ## MSG_TZ_MACRO ##_UTC_OFFSET);\
-            APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " offset: %d", settings.TZ_MACRO ## _offset);\
+            if(!strcmp(settings.TZ_MACRO ## _tz, ""))\
+            {\
+                strcpy(settings.TZ_MACRO ## _tz, INIT_TZ01_RULE);\
+            }\
+            APP_LOG(APP_LOG_LEVEL_DEBUG, "Found " #TZ_MACRO " TZ: %s", settings.TZ_MACRO ## _tz);\
         }
 
     TZ_DO_SETTINGS(tz02, TZ02)
@@ -306,6 +314,7 @@ void update_tz_time(struct tm *tick_time)
     // This does NOT appear to be documented
 
     utc_time=time(NULL);
+    // FIXME microtz function calls here
     // Not supposed to peak at a time_t but know it is number of seconds since epoc.
     // So perform arithmetic on second s
     utc_time += (60 * settings.tz01_offset) + (60 * settings.local_offset_in_mins);
@@ -353,6 +362,7 @@ void tz_init()
     {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "tz settings NOTE loaded");
     }
+    // FIXME TZ rule parsing and processing
 }
 void tz_deinit()
 {
