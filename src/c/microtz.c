@@ -154,7 +154,7 @@ int microtz_offset(const microtz_info *info, time_t now) {
     time_t start = determine_change(&info->start, year, info->offset);
     time_t end = determine_change(&info->end, year, info->offset + 3600);
 
-    if (now > start && now < end) {
+    if (now >= start && now < end) {
         return (info->offset + 3600) / 60;
     }
     return info->offset / 60;
